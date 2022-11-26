@@ -15,7 +15,7 @@ type Querier interface {
 
 func main() {
 	g := gen.NewGenerator(gen.Config{
-		OutPath: "query",
+		OutPath: "../query",
 		Mode:    gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface, // generate mode
 	})
 
