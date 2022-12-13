@@ -15,15 +15,15 @@ type Querier interface {
 
 func main() {
 	g := gen.NewGenerator(gen.Config{
-		OutPath: "../query",
-		Mode:    gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface, // generate mode
+		OutPath: "query",
+		Mode:    gen.WithDefaultQuery | gen.WithQueryInterface | gen.WithoutContext, // generate mode
 	})
 
 	gormdb, _ := gorm.Open(mysql.Open("root:pass@tcp(127.0.0.1:3306)/demo?charset=utf8mb4&parseTime=True&loc=Local"))
 	g.UseDB(gormdb) // reuse your gorm db
 
 	// Generate basic type-safe DAO API for struct `model.User` following conventions
-	g.ApplyBasic(model.Customer{}, &model.Account{})
+	g.ApplyBasic(model.Customer{}, &model.Account{}, &model.Tx{})
 
 	// Generate the code
 	g.Execute()

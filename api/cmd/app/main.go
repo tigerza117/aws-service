@@ -5,6 +5,11 @@ import (
 	"api/query"
 	"context"
 	"errors"
+	"fmt"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/sqs"
+	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"golang.org/x/crypto/bcrypt"
@@ -13,15 +18,15 @@ import (
 	"net/http"
 )
 
-const SEND_TO_QUEUE = false
+var SendToQueue = true
 
 func main() {
-	gormdb, err := gorm.Open(mysql.Open("root:pass@tcp(127.0.0.1:3306)/demo?charset=utf8mb4&parseTime=True&loc=Local"))
+	gormDB, err := gorm.Open(mysql.Open("root:pass@tcp(127.0.0.1:3306)/demo?charset=utf8mb4&parseTime=True&loc=Local"))
 	if err != nil {
 		panic(err)
 	}
-	gormdb.AutoMigrate(&model.Customer{}, &model.Account{})
-	query.SetDefault(gormdb)
+	gormDB.AutoMigrate(&model.Customer{}, &model.Account{}, &model.Tx{})
+	query.SetDefault(gormDB)
 
 	app := fiber.New()
 
@@ -30,6 +35,30 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
+
+	queue := "transaction"
+
+	cfg, err := config.LoadDefaultConfig(context.TODO(),
+		config.WithRegion("us-east-1"),
+	)
+	if err != nil {
+		panic("configuration error, " + err.Error())
+	}
+
+	client := sqs.NewFromConfig(cfg)
+
+	gQInput := &sqs.GetQueueUrlInput{
+		QueueName: &queue,
+	}
+
+	result, err := GetQueueURL(context.TODO(), client, gQInput)
+	if err != nil {
+		fmt.Println("Got an error getting the queue URL:")
+		fmt.Println(err)
+		return
+	}
+
+	queueURL := result.QueueUrl
 
 	app.Post("/register", func(c *fiber.Ctx) error {
 		body := struct {
@@ -248,7 +277,16 @@ func main() {
 			return err
 		}
 
-		if !SEND_TO_QUEUE {
+		t := model.Tx{
+			AccountID:    sourceAcc.ID,
+			DesAccountID: targetAcc.ID,
+			Amount:       body.Amount * 1,
+			//Title:        "Transfer",
+			//Description:  fmt.Sprintf("Transfer to account %s", masker.String(masker.MID, targetAcc.No)),
+			Status: model.TransactionPending,
+		}
+
+		if !SendToQueue {
 			if err := query.Q.Transaction(func(tx *query.Query) error {
 				if _, err := tx.WithContext(context.Background()).Account.Where(tx.Account.ID.Eq(targetAcc.ID)).UpdateSimple(tx.Account.Balance.Add(body.Amount)); err != nil {
 					return err
@@ -256,16 +294,45 @@ func main() {
 				if _, err := tx.WithContext(context.Background()).Account.Where(tx.Account.ID.Eq(sourceAcc.ID), tx.Account.Balance.Gte(body.Amount)).UpdateSimple(tx.Account.Balance.Sub(body.Amount)); err != nil {
 					return err
 				}
+				t.Status = model.TransactionSuccess
+				if err := tx.WithContext(context.Background()).Tx.Create(&t); err != nil {
+					return err
+				}
 				return nil
 			}); err != nil {
 				return err
 			}
+		} else {
+			if err := query.Tx.Create(&t); err != nil {
+				return err
+			}
+
+			sMInput := &sqs.SendMessageInput{
+				QueueUrl:     queueURL,
+				DelaySeconds: 1,
+				MessageAttributes: map[string]types.MessageAttributeValue{
+					"TxID": {
+						DataType:    aws.String("String"),
+						StringValue: aws.String(fmt.Sprintf("%d", t.ID)),
+					},
+				},
+				MessageBody: aws.String("HellO!"),
+			}
+
+			resp, err := SendMsg(context.TODO(), client, sMInput)
+			if err != nil {
+				fmt.Println("Got an error sending the message:")
+				fmt.Println(err)
+				return err
+			}
+
+			fmt.Println("Sent message with ID: " + *resp.MessageId)
 		}
 
 		return c.SendStatus(http.StatusOK)
 	})
 
-	app.Listen(":3000")
+	app.Listen(":3003")
 }
 
 func x(a model.AccountList) model.AccountList {

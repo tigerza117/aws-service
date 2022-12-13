@@ -19,12 +19,14 @@ var (
 	Q        = new(Query)
 	Account  *account
 	Customer *customer
+	Tx       *tx
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	Account = &Q.Account
 	Customer = &Q.Customer
+	Tx = &Q.Tx
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
@@ -32,6 +34,7 @@ func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 		db:       db,
 		Account:  newAccount(db, opts...),
 		Customer: newCustomer(db, opts...),
+		Tx:       newTx(db, opts...),
 	}
 }
 
@@ -40,6 +43,7 @@ type Query struct {
 
 	Account  account
 	Customer customer
+	Tx       tx
 }
 
 func (q *Query) Available() bool { return q.db != nil }
@@ -49,6 +53,7 @@ func (q *Query) clone(db *gorm.DB) *Query {
 		db:       db,
 		Account:  q.Account.clone(db),
 		Customer: q.Customer.clone(db),
+		Tx:       q.Tx.clone(db),
 	}
 }
 
@@ -65,18 +70,21 @@ func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 		db:       db,
 		Account:  q.Account.replaceDB(db),
 		Customer: q.Customer.replaceDB(db),
+		Tx:       q.Tx.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
 	Account  IAccountDo
 	Customer ICustomerDo
+	Tx       ITxDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
 		Account:  q.Account.WithContext(ctx),
 		Customer: q.Customer.WithContext(ctx),
+		Tx:       q.Tx.WithContext(ctx),
 	}
 }
 

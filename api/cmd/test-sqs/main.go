@@ -79,14 +79,11 @@ func main() {
 	}
 
 	cfg, err := config.LoadDefaultConfig(context.TODO(),
-
 		config.WithRegion("us-east-1"),
 	)
 	if err != nil {
 		panic("configuration error, " + err.Error())
 	}
-
-	println("Hello World")
 
 	client := sqs.NewFromConfig(cfg)
 
