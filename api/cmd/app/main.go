@@ -279,7 +279,7 @@ func main() {
 
 		t := model.Tx{
 			AccountID:    sourceAcc.ID,
-			DesAccountID: targetAcc.ID,
+			DstAccountID: targetAcc.ID,
 			Amount:       body.Amount * 1,
 			//Title:        "Transfer",
 			//Description:  fmt.Sprintf("Transfer to account %s", masker.String(masker.MID, targetAcc.No)),

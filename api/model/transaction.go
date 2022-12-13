@@ -17,12 +17,12 @@ type Tx struct {
 	gorm.Model
 
 	AccountID    uint              `json:"-"`
-	DesAccountID uint              `json:"-"`
+	DstAccountID uint              `json:"-"`
 	Amount       float64           `json:"amount"`
 	Status       TransactionStatus `json:"status"`
 
 	Account    *Account `json:"-"`
-	DesAccount *Account `json:"-"`
+	DstAccount *Account `json:"-"`
 }
 
 func (t *Tx) JSON() fiber.Map {

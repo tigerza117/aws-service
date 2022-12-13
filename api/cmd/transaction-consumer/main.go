@@ -83,10 +83,9 @@ func main() {
 			if err != nil {
 				panic(err)
 			}
-			t.Status = model.TransactionSuccess
 
 			if err := query.Q.Transaction(func(tx *query.Query) error {
-				if _, err := tx.WithContext(context.Background()).Account.Where(tx.Account.ID.Eq(t.DesAccountID)).UpdateSimple(tx.Account.Balance.Add(t.Amount)); err != nil {
+				if _, err := tx.WithContext(context.Background()).Account.Where(tx.Account.ID.Eq(t.DstAccountID)).UpdateSimple(tx.Account.Balance.Add(t.Amount)); err != nil {
 					return err
 				}
 				if _, err := tx.WithContext(context.Background()).Account.Where(tx.Account.ID.Eq(t.AccountID), tx.Account.Balance.Gte(t.Amount)).UpdateSimple(tx.Account.Balance.Sub(t.Amount)); err != nil {
