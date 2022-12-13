@@ -27,6 +27,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.13.8 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sts v1.17.5 // indirect
 	github.com/aws/smithy-go v1.13.4 // indirect
+	github.com/ggwhite/go-masker v1.0.9 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
