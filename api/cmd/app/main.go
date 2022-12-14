@@ -5,11 +5,6 @@ import (
 	"api/query"
 	"context"
 	"errors"
-	"fmt"
-	"github.com/aws/aws-sdk-go-v2/aws"
-	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/sqs"
-	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"golang.org/x/crypto/bcrypt"
@@ -18,7 +13,7 @@ import (
 	"net/http"
 )
 
-var SendToQueue = true
+var SendToQueue = false
 
 func main() {
 	gormDB, err := gorm.Open(mysql.Open("root:pass@tcp(127.0.0.1:3306)/demo?charset=utf8mb4&parseTime=True&loc=Local"))
@@ -36,29 +31,29 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
 
-	queue := "transaction"
-
-	cfg, err := config.LoadDefaultConfig(context.TODO(),
-		config.WithRegion("us-east-1"),
-	)
+	//queue := "transaction"
+	//
+	//cfg, err := config.LoadDefaultConfig(context.TODO(),
+	//	config.WithRegion("us-east-1"),
+	//)
 	if err != nil {
 		panic("configuration error, " + err.Error())
 	}
 
-	client := sqs.NewFromConfig(cfg)
+	//client := sqs.NewFromConfig(cfg)
 
-	gQInput := &sqs.GetQueueUrlInput{
-		QueueName: &queue,
-	}
+	//gQInput := &sqs.GetQueueUrlInput{
+	//	QueueName: &queue,
+	//}
 
-	result, err := GetQueueURL(context.TODO(), client, gQInput)
-	if err != nil {
-		fmt.Println("Got an error getting the queue URL:")
-		fmt.Println(err)
-		return
-	}
-
-	queueURL := result.QueueUrl
+	//result, err := GetQueueURL(context.TODO(), client, gQInput)
+	//if err != nil {
+	//	fmt.Println("Got an error getting the queue URL:")
+	//	fmt.Println(err)
+	//	return
+	//}
+	//
+	//queueURL := result.QueueUrl
 
 	app.Post("/register", func(c *fiber.Ctx) error {
 		body := struct {
@@ -303,30 +298,30 @@ func main() {
 				return err
 			}
 		} else {
-			if err := query.Tx.Create(&t); err != nil {
-				return err
-			}
-
-			sMInput := &sqs.SendMessageInput{
-				QueueUrl:     queueURL,
-				DelaySeconds: 1,
-				MessageAttributes: map[string]types.MessageAttributeValue{
-					"TxID": {
-						DataType:    aws.String("String"),
-						StringValue: aws.String(fmt.Sprintf("%d", t.ID)),
-					},
-				},
-				MessageBody: aws.String("HellO!"),
-			}
-
-			resp, err := SendMsg(context.TODO(), client, sMInput)
-			if err != nil {
-				fmt.Println("Got an error sending the message:")
-				fmt.Println(err)
-				return err
-			}
-
-			fmt.Println("Sent message with ID: " + *resp.MessageId)
+			//if err := query.Tx.Create(&t); err != nil {
+			//	return err
+			//}
+			//
+			//sMInput := &sqs.SendMessageInput{
+			//	QueueUrl:     queueURL,
+			//	DelaySeconds: 1,
+			//	MessageAttributes: map[string]types.MessageAttributeValue{
+			//		"TxID": {
+			//			DataType:    aws.String("String"),
+			//			StringValue: aws.String(fmt.Sprintf("%d", t.ID)),
+			//		},
+			//	},
+			//	MessageBody: aws.String("HellO!"),
+			//}
+			//
+			//resp, err := SendMsg(context.TODO(), client, sMInput)
+			//if err != nil {
+			//	fmt.Println("Got an error sending the message:")
+			//	fmt.Println(err)
+			//	return err
+			//}
+			//
+			//fmt.Println("Sent message with ID: " + *resp.MessageId)
 		}
 
 		return c.SendStatus(http.StatusOK)
