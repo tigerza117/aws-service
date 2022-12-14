@@ -11,12 +11,11 @@ import (
 type Account struct {
 	gorm.Model
 
-	CustomerID uint    `json:"-"`
-	Name       string  `json:"-"`
-	No         string  `json:"-"`
-	Balance    float64 `json:"-"`
-
-	Customer *Customer `json:"-"`
+	CustomerID uint      `json:"-"`
+	Name       string    `json:"-" gorm:"type:varchar(100);uniqueIndex"`
+	No         string    `json:"-"`
+	Balance    float64   `json:"-"`
+	Customer   *Customer `json:"-"`
 }
 
 func (a *Account) BeforeCreate(tx *gorm.DB) (err error) {
