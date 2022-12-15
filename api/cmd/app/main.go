@@ -44,14 +44,18 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
 
+	if os.Getenv("SQS_ENABLE") == "TRUE" {
+		SendToQueue = true
+	}
+
 	var queueURL *string
 	var client *sqs.Client
 
 	if SendToQueue {
-		queue := "transaction"
+		queue := os.Getenv("SQS_NAME")
 
 		cfg, err := config.LoadDefaultConfig(context.TODO(),
-			config.WithRegion("us-east-1"),
+			config.WithRegion(os.Getenv("SQS_REGION")),
 		)
 		if err != nil {
 			panic("configuration error, " + err.Error())
