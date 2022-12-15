@@ -12,16 +12,24 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"log"
 	"net/http"
+	"os"
 )
 
 var SendToQueue = true
 
 func main() {
-	gormDB, err := gorm.Open(mysql.Open("root:pass@tcp(127.0.0.1:3306)/demo?charset=utf8mb4&parseTime=True&loc=Local"))
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	gormDB, err := gorm.Open(mysql.Open(os.Getenv("DB_DSN")))
 	if err != nil {
 		panic(err)
 	}
@@ -332,7 +340,7 @@ func main() {
 		return c.SendStatus(http.StatusOK)
 	})
 
-	app.Listen(":3003")
+	app.Listen(os.Getenv("LISTEN"))
 }
 
 func x(a model.AccountList) model.AccountList {
