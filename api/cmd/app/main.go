@@ -87,7 +87,7 @@ func main() {
 		if err := c.BodyParser(&body); err != nil {
 			return err
 		}
-		e := fiber.NewError(http.StatusBadRequest, "password wrong")
+		e := fiber.NewError(http.StatusBadRequest, "Incorrect E-mail/Password")
 		cus, err := query.Customer.Where(query.Customer.Email.Eq(body.Email)).First()
 		if err != nil {
 			if errors.Is(gorm.ErrRecordNotFound, err) {
@@ -259,6 +259,9 @@ func main() {
 
 		sourceAcc, err := query.Account.Where(query.Account.ID.Eq(body.Id), query.Account.CustomerID.Eq(cid)).First()
 		if err != nil {
+			if errors.Is(gorm.ErrRecordNotFound, err) {
+				return fiber.NewError(http.StatusBadRequest, "source acc not found")
+			}
 			return err
 		}
 
@@ -268,6 +271,9 @@ func main() {
 
 		targetAcc, err := query.Account.Where(query.Account.No.Eq(body.Acc)).Preload(query.Account.Customer).First()
 		if err != nil {
+			if errors.Is(gorm.ErrRecordNotFound, err) {
+				return fiber.NewError(http.StatusBadRequest, "target acc not found")
+			}
 			return err
 		}
 
