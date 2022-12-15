@@ -21,7 +21,7 @@ import (
 	"os"
 )
 
-var SendToQueue = true
+var SendToQueue = false
 
 func main() {
 	err := godotenv.Load()
@@ -44,29 +44,34 @@ func main() {
 		return c.SendString("Hello, World!")
 	})
 
-	queue := "transaction"
+	var queueURL *string
+	var client *sqs.Client
 
-	cfg, err := config.LoadDefaultConfig(context.TODO(),
-		config.WithRegion("us-east-1"),
-	)
-	if err != nil {
-		panic("configuration error, " + err.Error())
+	if SendToQueue {
+		queue := "transaction"
+
+		cfg, err := config.LoadDefaultConfig(context.TODO(),
+			config.WithRegion("us-east-1"),
+		)
+		if err != nil {
+			panic("configuration error, " + err.Error())
+		}
+
+		client = sqs.NewFromConfig(cfg)
+
+		gQInput := &sqs.GetQueueUrlInput{
+			QueueName: &queue,
+		}
+
+		result, err := GetQueueURL(context.TODO(), client, gQInput)
+		if err != nil {
+			fmt.Println("Got an error getting the queue URL:")
+			fmt.Println(err)
+			return
+		}
+
+		queueURL = result.QueueUrl
 	}
-
-	client := sqs.NewFromConfig(cfg)
-
-	gQInput := &sqs.GetQueueUrlInput{
-		QueueName: &queue,
-	}
-
-	result, err := GetQueueURL(context.TODO(), client, gQInput)
-	if err != nil {
-		fmt.Println("Got an error getting the queue URL:")
-		fmt.Println(err)
-		return
-	}
-
-	queueURL := result.QueueUrl
 
 	app.Post("/register", func(c *fiber.Ctx) error {
 		body := struct {
@@ -100,7 +105,7 @@ func main() {
 		if err := c.BodyParser(&body); err != nil {
 			return err
 		}
-		e := fiber.NewError(http.StatusBadRequest, "password wrong")
+		e := fiber.NewError(http.StatusBadRequest, "Incorrect E-mail/Password")
 		cus, err := query.Customer.Where(query.Customer.Email.Eq(body.Email)).First()
 		if err != nil {
 			if errors.Is(gorm.ErrRecordNotFound, err) {
@@ -208,9 +213,9 @@ func main() {
 
 	app.Post("/pre-transfer", func(c *fiber.Ctx) error {
 		body := struct {
-			SourceAccId uint    `json:"source_acc_id"`
-			AccNo       string  `json:"acc_no"`
-			Amount      float64 `json:"amount"`
+			Id     uint    `json:"id"`  // Src Account ID
+			Acc    string  `json:"acc"` // Dst Account No
+			Amount float64 `json:"amount"`
 		}{}
 		if err := c.BodyParser(&body); err != nil {
 			return err
@@ -225,8 +230,7 @@ func main() {
 		if !ok {
 			return c.SendStatus(http.StatusForbidden)
 		}
-
-		sourceAcc, err := query.Account.Where(query.Account.ID.Eq(body.SourceAccId), query.Account.CustomerID.Eq(cid)).First()
+		sourceAcc, err := query.Account.Where(query.Account.ID.Eq(body.Id), query.Account.CustomerID.Eq(cid)).First()
 		if err != nil {
 			if errors.Is(gorm.ErrRecordNotFound, err) {
 				return fiber.NewError(http.StatusBadRequest, "source acc not found")
@@ -238,7 +242,7 @@ func main() {
 			return fiber.NewError(http.StatusBadRequest, "balance not enough")
 		}
 
-		targetAcc, err := query.Account.Where(query.Account.No.Eq(body.AccNo)).Preload(query.Account.Customer).First()
+		targetAcc, err := query.Account.Where(query.Account.No.Eq(body.Acc)).Preload(query.Account.Customer).First()
 		if err != nil {
 			if errors.Is(gorm.ErrRecordNotFound, err) {
 				return fiber.NewError(http.StatusBadRequest, "target acc not found")
@@ -253,9 +257,9 @@ func main() {
 
 	app.Post("/transfer", func(c *fiber.Ctx) error {
 		body := struct {
-			SourceAccId uint    `json:"source_acc_id"`
-			AccNo       string  `json:"acc_no"`
-			Amount      float64 `json:"amount"`
+			Id     uint    `json:"id"`  // Src Account ID
+			Acc    string  `json:"acc"` // Dst Account No
+			Amount float64 `json:"amount"`
 		}{}
 		if err := c.BodyParser(&body); err != nil {
 			return err
@@ -271,8 +275,11 @@ func main() {
 			return c.SendStatus(http.StatusForbidden)
 		}
 
-		sourceAcc, err := query.Account.Where(query.Account.ID.Eq(body.SourceAccId), query.Account.CustomerID.Eq(cid)).First()
+		sourceAcc, err := query.Account.Where(query.Account.ID.Eq(body.Id), query.Account.CustomerID.Eq(cid)).First()
 		if err != nil {
+			if errors.Is(gorm.ErrRecordNotFound, err) {
+				return fiber.NewError(http.StatusBadRequest, "source acc not found")
+			}
 			return err
 		}
 
@@ -280,8 +287,11 @@ func main() {
 			return fiber.NewError(http.StatusBadRequest, "balance not enough")
 		}
 
-		targetAcc, err := query.Account.Where(query.Account.No.Eq(body.AccNo)).Preload(query.Account.Customer).First()
+		targetAcc, err := query.Account.Where(query.Account.No.Eq(body.Acc)).Preload(query.Account.Customer).First()
 		if err != nil {
+			if errors.Is(gorm.ErrRecordNotFound, err) {
+				return fiber.NewError(http.StatusBadRequest, "target acc not found")
+			}
 			return err
 		}
 
