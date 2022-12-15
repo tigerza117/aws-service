@@ -296,7 +296,7 @@ func main() {
 		}
 
 		t := model.Tx{
-			AccountID:    sourceAcc.ID,
+			AccountID:    &sourceAcc.ID,
 			DstAccountID: targetAcc.ID,
 			Amount:       body.Amount * 1,
 			//Title:        "Transfer",
@@ -310,6 +310,94 @@ func main() {
 					return err
 				}
 				if _, err := tx.WithContext(context.Background()).Account.Where(tx.Account.ID.Eq(sourceAcc.ID), tx.Account.Balance.Gte(body.Amount)).UpdateSimple(tx.Account.Balance.Sub(body.Amount)); err != nil {
+					return err
+				}
+				t.Status = model.TransactionSuccess
+				if err := tx.WithContext(context.Background()).Tx.Create(&t); err != nil {
+					return err
+				}
+				return nil
+			}); err != nil {
+				return err
+			}
+		} else {
+			if err := query.Tx.Create(&t); err != nil {
+				return err
+			}
+
+			sMInput := &sqs.SendMessageInput{
+				QueueUrl:     queueURL,
+				DelaySeconds: 1,
+				MessageAttributes: map[string]types.MessageAttributeValue{
+					"TxID": {
+						DataType:    aws.String("String"),
+						StringValue: aws.String(fmt.Sprintf("%d", t.ID)),
+					},
+				},
+				MessageBody: aws.String("HellO!"),
+			}
+
+			resp, err := SendMsg(context.TODO(), client, sMInput)
+			if err != nil {
+				fmt.Println("Got an error sending the message:")
+				fmt.Println(err)
+				return err
+			}
+
+			fmt.Println("Sent message with ID: " + *resp.MessageId)
+		}
+
+		return c.SendStatus(http.StatusOK)
+	})
+
+	app.Post("/pre-deposit", func(c *fiber.Ctx) error {
+		body := struct {
+			Acc    string  `json:"acc"` // AccountNo
+			Amount float64 `json:"amount"`
+		}{}
+		if err := c.BodyParser(&body); err != nil {
+			return err
+		}
+
+		targetAcc, err := query.Account.Where(query.Account.No.Eq(body.Acc)).Preload(query.Account.Customer).First()
+		if err != nil {
+			if errors.Is(gorm.ErrRecordNotFound, err) {
+				return fiber.NewError(http.StatusBadRequest, "target acc not found")
+			}
+			return err
+		}
+
+		return c.Status(http.StatusOK).JSON(fiber.Map{
+			"target_name": targetAcc.Customer.Name,
+		})
+	})
+
+	app.Post("/deposit", func(c *fiber.Ctx) error {
+		body := struct {
+			Acc    string  `json:"acc"` // AccountNo
+			Amount float64 `json:"amount"`
+		}{}
+		if err := c.BodyParser(&body); err != nil {
+			return err
+		}
+
+		targetAcc, err := query.Account.Where(query.Account.No.Eq(body.Acc)).Preload(query.Account.Customer).First()
+		if err != nil {
+			if errors.Is(gorm.ErrRecordNotFound, err) {
+				return fiber.NewError(http.StatusBadRequest, "target acc not found")
+			}
+			return err
+		}
+
+		t := model.Tx{
+			DstAccountID: targetAcc.ID,
+			Amount:       body.Amount * 1,
+			Status:       model.TransactionPending,
+		}
+
+		if !SendToQueue {
+			if err := query.Q.Transaction(func(tx *query.Query) error {
+				if _, err := tx.WithContext(context.Background()).Account.Where(tx.Account.ID.Eq(targetAcc.ID)).UpdateSimple(tx.Account.Balance.Add(body.Amount)); err != nil {
 					return err
 				}
 				t.Status = model.TransactionSuccess

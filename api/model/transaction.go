@@ -16,7 +16,7 @@ const (
 type Tx struct {
 	gorm.Model
 
-	AccountID    uint              `json:"-"`
+	AccountID    *uint             `json:"-"`
 	DstAccountID uint              `json:"-"`
 	Amount       float64           `json:"amount"`
 	Status       TransactionStatus `json:"status"`
