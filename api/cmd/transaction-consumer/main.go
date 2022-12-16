@@ -88,8 +88,10 @@ func main() {
 				if _, err := tx.WithContext(context.Background()).Account.Where(tx.Account.ID.Eq(t.DstAccountID)).UpdateSimple(tx.Account.Balance.Add(t.Amount)); err != nil {
 					return err
 				}
-				if _, err := tx.WithContext(context.Background()).Account.Where(tx.Account.ID.Eq(t.AccountID), tx.Account.Balance.Gte(t.Amount)).UpdateSimple(tx.Account.Balance.Sub(t.Amount)); err != nil {
-					return err
+				if t.AccountID != nil {
+					if _, err := tx.WithContext(context.Background()).Account.Where(tx.Account.ID.Eq(*t.AccountID), tx.Account.Balance.Gte(t.Amount)).UpdateSimple(tx.Account.Balance.Sub(t.Amount)); err != nil {
+						return err
+					}
 				}
 				t.Status = model.TransactionSuccess
 				if _, err := tx.WithContext(context.Background()).Tx.Updates(t); err != nil {
