@@ -266,7 +266,8 @@ func main() {
 		}
 
 		return c.Status(http.StatusOK).JSON(fiber.Map{
-			"target_name": targetAcc.Customer.Name,
+			"target_account": targetAcc.Name,
+			"target_name":    targetAcc.Customer.Name,
 		})
 	})
 
@@ -391,7 +392,8 @@ func main() {
 		}
 
 		return c.Status(http.StatusOK).JSON(fiber.Map{
-			"target_name": targetAcc.Customer.Name,
+			"target_account": targetAcc.Name,
+			"target_name":    targetAcc.Customer.Name,
 		})
 	})
 
