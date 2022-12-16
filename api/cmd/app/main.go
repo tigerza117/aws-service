@@ -240,6 +240,11 @@ func main() {
 		if !ok {
 			return c.SendStatus(http.StatusForbidden)
 		}
+
+		if body.Amount <= 0 {
+			return fiber.NewError(http.StatusBadRequest, "amount cant be negative/zero")
+		}
+
 		sourceAcc, err := query.Account.Where(query.Account.ID.Eq(body.Id), query.Account.CustomerID.Eq(cid)).First()
 		if err != nil {
 			if errors.Is(gorm.ErrRecordNotFound, err) {
@@ -283,6 +288,10 @@ func main() {
 		cid, ok := sess.Get("cid").(uint)
 		if !ok {
 			return c.SendStatus(http.StatusForbidden)
+		}
+
+		if body.Amount <= 0 {
+			return fiber.NewError(http.StatusBadRequest, "amount cant be negative/zero")
 		}
 
 		sourceAcc, err := query.Account.Where(query.Account.ID.Eq(body.Id), query.Account.CustomerID.Eq(cid)).First()
@@ -369,6 +378,10 @@ func main() {
 			return err
 		}
 
+		if body.Amount <= 0 {
+			return fiber.NewError(http.StatusBadRequest, "amount cant be negative/zero")
+		}
+
 		targetAcc, err := query.Account.Where(query.Account.No.Eq(body.Acc)).Preload(query.Account.Customer).First()
 		if err != nil {
 			if errors.Is(gorm.ErrRecordNotFound, err) {
@@ -389,6 +402,10 @@ func main() {
 		}{}
 		if err := c.BodyParser(&body); err != nil {
 			return err
+		}
+
+		if body.Amount <= 0 {
+			return fiber.NewError(http.StatusBadRequest, "amount cant be negative/zero")
 		}
 
 		targetAcc, err := query.Account.Where(query.Account.No.Eq(body.Acc)).Preload(query.Account.Customer).First()
