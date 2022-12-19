@@ -1,0 +1,113 @@
+body {
+    background-color: whitesmoke;
+  }
+  
+  h1 {
+    color: black;
+    text-align: center;
+  }
+  h3 {
+    color: black;
+    font-weight: bold;
+  }
+  
+  p {
+    font-family: verdana;
+    font-size: 20px;
+  }
+
+  .profile-card {
+    background-color: blanchedalmond;
+    width: 1500px;
+    height: 800px;
+    display: flex;
+    /* align-items: center;
+    justify-content: center; */
+  }
+  .outside-boarder {
+    /* background-color: rosybrown; */
+    align-items: center;
+    justify-content: center;
+    display: flex;
+
+  }
+
+  .user-info {
+    height: 100%;
+    width: 25%;
+    background-color: aqua;
+    /* align-items: center; */
+    justify-content: center;
+    /* display: flex;
+    flex-direction: column; */
+    position: relative;
+    border-style: groove;
+  }
+
+  .user-acct {
+    height: 100%;
+    width: 75%;
+    /* background-color:rgb(47, 114, 114); */
+    display: flex;
+    flex-direction: column;
+  }
+
+  .information {
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    /* background-color: rebeccapurple; */
+  }
+  .user-pic {
+    /* background-color: darkgreen; */
+    align-items: center;
+    justify-content: center;
+    display: flex;
+  }
+  .username {
+    padding-left: 3%;
+  }
+  .email {
+    padding-left: 3%;
+  }
+  .userid {
+    padding-left: 3%;
+  }
+  .info-timedate {
+    position: absolute;
+    bottom: 0px;
+    left: 25px;
+    color: gray;
+  }
+  dd {
+    font-size: 18px;
+  }
+
+
+  .bank-account-title{
+    width: 100%;
+    height: 10%;
+    /* background-color: blanchedalmond; */
+    border-style: groove;
+  }
+  .account-card {
+    width: 100%;
+    height: 30%;
+    /* background-color:burlywood; */
+    display: flex;
+    border-style: groove;
+  }
+  .account-info {
+    height: 100%;
+    width: 60%;
+    /* background-color: chocolate; */
+  }
+  .balance {
+    height: 100%;
+    width: 40%;
+    /* background-color:darkgoldenrod; */
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    
+  }
