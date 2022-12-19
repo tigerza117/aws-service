@@ -12,7 +12,9 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/session"
+	"github.com/gofiber/fiber/v2/utils"
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/mysql"
@@ -20,6 +22,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"time"
 )
 
 var SendToQueue = false
@@ -38,12 +41,18 @@ func main() {
 	query.SetDefault(gormDB)
 
 	app := fiber.New()
-
-	store := session.New()
+	app.Use(logger.New())
+	store := session.New(session.Config{
+		Expiration:     24 * time.Hour,
+		KeyLookup:      "cookie:session_id",
+		KeyGenerator:   utils.UUID,
+		CookieSameSite: "None",
+	})
 
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "*",
-		AllowHeaders: "Origin, Content-Type, Accept",
+		AllowOrigins:     "*",
+		AllowHeaders:     "Origin, Content-Type, Accept",
+		AllowCredentials: true,
 	}))
 
 	app.Get("/", func(c *fiber.Ctx) error {
