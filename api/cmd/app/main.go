@@ -28,12 +28,13 @@ import (
 var SendToQueue = false
 
 func main() {
-	baseUrl := os.Getenv("BASE_URL")
 
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	var baseUrl = os.Getenv("BASE_URL")
 
 	gormDB, err := gorm.Open(mysql.Open(os.Getenv("DB_DSN")))
 	if err != nil {
@@ -57,7 +58,9 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	app.Get(baseUrl+"/", func(c *fiber.Ctx) error {
+	api := app.Group(baseUrl)
+
+	api.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
 
@@ -94,7 +97,7 @@ func main() {
 		queueURL = result.QueueUrl
 	}
 
-	app.Post(baseUrl+"/register", func(c *fiber.Ctx) error {
+	api.Post(baseUrl+"/register", func(c *fiber.Ctx) error {
 		body := struct {
 			Name     string `json:"name"`
 			Email    string `json:"email"`
@@ -118,7 +121,7 @@ func main() {
 		return c.SendStatus(http.StatusOK)
 	})
 
-	app.Post(baseUrl+"/login", func(c *fiber.Ctx) error {
+	api.Post(baseUrl+"/login", func(c *fiber.Ctx) error {
 		body := struct {
 			Email    string `json:"email"`
 			Password string `json:"password"`
@@ -152,7 +155,7 @@ func main() {
 		return c.SendStatus(http.StatusOK)
 	})
 
-	app.Post(baseUrl+"/logout", func(c *fiber.Ctx) error {
+	api.Post(baseUrl+"/logout", func(c *fiber.Ctx) error {
 		sess, err := store.Get(c)
 		if err != nil {
 			panic(err)
@@ -165,7 +168,7 @@ func main() {
 		return c.SendStatus(http.StatusOK)
 	})
 
-	app.Get(baseUrl+"/profile", func(c *fiber.Ctx) error {
+	api.Get(baseUrl+"/profile", func(c *fiber.Ctx) error {
 		sess, err := store.Get(c)
 		if err != nil {
 			panic(err)
@@ -184,7 +187,7 @@ func main() {
 		return c.Status(http.StatusOK).JSON(cus.JSON())
 	})
 
-	app.Get(baseUrl+"/accounts", func(c *fiber.Ctx) error {
+	api.Get(baseUrl+"/accounts", func(c *fiber.Ctx) error {
 		sess, err := store.Get(c)
 		if err != nil {
 			panic(err)
@@ -203,7 +206,7 @@ func main() {
 		return c.Status(http.StatusOK).JSON(x(acc).JSON())
 	})
 
-	app.Put(baseUrl+"/account", func(c *fiber.Ctx) error {
+	api.Put(baseUrl+"/account", func(c *fiber.Ctx) error {
 		body := struct {
 			Name string `json:"name"`
 		}{}
@@ -232,7 +235,7 @@ func main() {
 		return c.SendStatus(http.StatusOK)
 	})
 
-	app.Post(baseUrl+"/pre-transfer", func(c *fiber.Ctx) error {
+	api.Post(baseUrl+"/pre-transfer", func(c *fiber.Ctx) error {
 		body := struct {
 			Id     uint    `json:"id"`  // Src Account ID
 			Acc    string  `json:"acc"` // Dst Account No
@@ -282,7 +285,7 @@ func main() {
 		})
 	})
 
-	app.Post(baseUrl+"/transfer", func(c *fiber.Ctx) error {
+	api.Post(baseUrl+"/transfer", func(c *fiber.Ctx) error {
 		body := struct {
 			Id     uint    `json:"id"`  // Src Account ID
 			Acc    string  `json:"acc"` // Dst Account No
@@ -381,7 +384,7 @@ func main() {
 		return c.SendStatus(http.StatusOK)
 	})
 
-	app.Post(baseUrl+"/pre-deposit", func(c *fiber.Ctx) error {
+	api.Post(baseUrl+"/pre-deposit", func(c *fiber.Ctx) error {
 		body := struct {
 			Acc    string  `json:"acc"` // AccountNo
 			Amount float64 `json:"amount"`
@@ -408,7 +411,7 @@ func main() {
 		})
 	})
 
-	app.Post(baseUrl+"/deposit", func(c *fiber.Ctx) error {
+	api.Post(baseUrl+"/deposit", func(c *fiber.Ctx) error {
 		body := struct {
 			Acc    string  `json:"acc"` // AccountNo
 			Amount float64 `json:"amount"`
