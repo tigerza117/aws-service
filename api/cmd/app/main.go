@@ -15,6 +15,7 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/fiber/v2/middleware/session"
 	"github.com/gofiber/fiber/v2/utils"
+	"github.com/gofiber/storage/redis"
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/mysql"
@@ -22,6 +23,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"runtime"
 	"time"
 )
 
@@ -45,12 +47,28 @@ func main() {
 
 	app := fiber.New()
 	app.Use(logger.New())
-	store := session.New(session.Config{
+	var storage fiber.Storage
+	if os.Getenv("REDIS_ENABLE") == "TRUE" {
+		storage = redis.New(redis.Config{
+			Host:     os.Getenv("REDIS_HOST"),
+			Port:     6379,
+			Database: 0,
+			Reset:    false,
+			PoolSize: 10 * runtime.GOMAXPROCS(0),
+		})
+	}
+
+	storeCfg := session.Config{
 		Expiration:     24 * time.Hour,
 		KeyLookup:      "cookie:session_id",
 		KeyGenerator:   utils.UUID,
 		CookieSameSite: "None",
-	})
+		Storage:        storage,
+	}
+	if os.Getenv("RUN_MODE") == "TEST" {
+		storeCfg.CookieSameSite = "Lax"
+	}
+	store := session.New(storeCfg)
 
 	app.Use(cors.New(cors.Config{
 		AllowOrigins:     "*",
