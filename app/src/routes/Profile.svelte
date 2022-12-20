@@ -1,29 +1,14 @@
 <script>
     import axios from "axios";
     import NotFound from "./NotFound.svelte";
+    import {link} from 'svelte-spa-router'
     let name = '';
+    let new_account = '';
     let email = '';
     let userid = '';
     let idcreated_at = '';
     let idupdated_at = '';
-    let bank_accounts = [
-        {
-        "balance": 100,
-        "created_at": "2022-12-14T21:19:05.98+07:00",
-        "id": 5,
-        "name": "yeah_account_1",
-        "no": "6908675654",
-        "updated_at": "2022-12-14T21:19:05.98+07:00"
-        },  
-        {
-        "balance": 2000,
-        "created_at": "2022-12-14T21:19:24.919+07:00",
-        "id": 7,
-        "name": "yeah_acc_2",
-        "no": "8510122835",
-        "updated_at": "2022-12-14T21:19:24.919+07:00"
-        }
-    ];
+    let bank_accounts = [];
 
     var config = {
         method: 'get',
@@ -41,16 +26,49 @@
             userid = response.data.id;
             idcreated_at = response.data.created_at;
             idupdated_at = response.data.updated_at;
-            // bank_accounts = response.data.account;
+            bank_accounts = response.data.account;
         } else {
             console.log('No data received from the server');
     }
     }).catch(function (error) {
         console.log(error);
     });
+
+    function reload(){
+        axios.get('https://i-here-ji.tigerza117.xyz/accounts').then(function (response) {
+            if (response.data) {
+                console.log(JSON.stringify(response.data));
+                console.log(response.data.name)
+                bank_accounts = response.data;
+                
+            } else {
+                console.log('No data received from the server');
+        }
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }
+    reload();
+    
+
+    // /*Create Bank Account*/
+    function handleClick() {
+    const data = {name: new_account};
+      axios.put("https://i-here-ji.tigerza117.xyz/account", data).then(result => {
+            alert("Create Complete");
+            new_account = '';
+            reload();
+		}).catch(err => {
+        console.log(err)
+        alert(err);
+      });
+    }
+
+
 </script>
 
 <body>
+    <a href="/login" use:link>LOGOUT</a>
     <section>
         <h1>INFORMATION</h1>
         <h2>Name: {name}</h2>
@@ -59,9 +77,17 @@
         <h4>ID Created: {idcreated_at}</h4>
         <h4>ID Updated: {idupdated_at}</h4>
     </section>
+
+    <section>
+        <h1>Create New Bank Account</h1>
+        <input bind:value={new_account} type="new_account" name="new_account" placeholder="Account Name"/>
+        <button on:click={handleClick}>Create</button>
+    </section>
+
     <div class="user-bank-account">
         {#each bank_accounts as bank_account}
         <div class="ba-card">
+            <!-- <p>Account</p> -->
             <h1>{bank_account.name}</h1>
             <h3>No.{bank_account.no}</h3>
             <h3>ID: {bank_account.id}</h3>
@@ -71,10 +97,7 @@
         </div>
         {/each}
     </div>
-
-
 </body>
-
 
 <style>
 	section {
@@ -91,6 +114,7 @@
     .ba-card {
         width: 500px;
         border-style: double;
+        padding: 10px;
     }
 
 </style>
