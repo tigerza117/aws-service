@@ -97,7 +97,7 @@ func main() {
 		queueURL = result.QueueUrl
 	}
 
-	api.Post(baseUrl+"/register", func(c *fiber.Ctx) error {
+	api.Post("/register", func(c *fiber.Ctx) error {
 		body := struct {
 			Name     string `json:"name"`
 			Email    string `json:"email"`
@@ -121,7 +121,7 @@ func main() {
 		return c.SendStatus(http.StatusOK)
 	})
 
-	api.Post(baseUrl+"/login", func(c *fiber.Ctx) error {
+	api.Post("/login", func(c *fiber.Ctx) error {
 		body := struct {
 			Email    string `json:"email"`
 			Password string `json:"password"`
@@ -155,7 +155,7 @@ func main() {
 		return c.SendStatus(http.StatusOK)
 	})
 
-	api.Post(baseUrl+"/logout", func(c *fiber.Ctx) error {
+	api.Post("/logout", func(c *fiber.Ctx) error {
 		sess, err := store.Get(c)
 		if err != nil {
 			panic(err)
@@ -168,7 +168,7 @@ func main() {
 		return c.SendStatus(http.StatusOK)
 	})
 
-	api.Get(baseUrl+"/profile", func(c *fiber.Ctx) error {
+	api.Get("/profile", func(c *fiber.Ctx) error {
 		sess, err := store.Get(c)
 		if err != nil {
 			panic(err)
@@ -187,7 +187,7 @@ func main() {
 		return c.Status(http.StatusOK).JSON(cus.JSON())
 	})
 
-	api.Get(baseUrl+"/accounts", func(c *fiber.Ctx) error {
+	api.Get("/accounts", func(c *fiber.Ctx) error {
 		sess, err := store.Get(c)
 		if err != nil {
 			panic(err)
@@ -206,7 +206,7 @@ func main() {
 		return c.Status(http.StatusOK).JSON(x(acc).JSON())
 	})
 
-	api.Put(baseUrl+"/account", func(c *fiber.Ctx) error {
+	api.Put("/account", func(c *fiber.Ctx) error {
 		body := struct {
 			Name string `json:"name"`
 		}{}
@@ -235,7 +235,7 @@ func main() {
 		return c.SendStatus(http.StatusOK)
 	})
 
-	api.Post(baseUrl+"/pre-transfer", func(c *fiber.Ctx) error {
+	api.Post("/pre-transfer", func(c *fiber.Ctx) error {
 		body := struct {
 			Id     uint    `json:"id"`  // Src Account ID
 			Acc    string  `json:"acc"` // Dst Account No
@@ -285,7 +285,7 @@ func main() {
 		})
 	})
 
-	api.Post(baseUrl+"/transfer", func(c *fiber.Ctx) error {
+	api.Post("/transfer", func(c *fiber.Ctx) error {
 		body := struct {
 			Id     uint    `json:"id"`  // Src Account ID
 			Acc    string  `json:"acc"` // Dst Account No
@@ -384,7 +384,7 @@ func main() {
 		return c.SendStatus(http.StatusOK)
 	})
 
-	api.Post(baseUrl+"/pre-deposit", func(c *fiber.Ctx) error {
+	api.Post("/pre-deposit", func(c *fiber.Ctx) error {
 		body := struct {
 			Acc    string  `json:"acc"` // AccountNo
 			Amount float64 `json:"amount"`
@@ -411,7 +411,7 @@ func main() {
 		})
 	})
 
-	api.Post(baseUrl+"/deposit", func(c *fiber.Ctx) error {
+	api.Post("/deposit", func(c *fiber.Ctx) error {
 		body := struct {
 			Acc    string  `json:"acc"` // AccountNo
 			Amount float64 `json:"amount"`
