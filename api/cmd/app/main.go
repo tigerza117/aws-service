@@ -211,7 +211,7 @@ func main() {
 
 		// Save session
 		if err := sess.Destroy(); err != nil {
-			panic(err)
+			return c.Status(fiber.StatusInternalServerError).SendString("Internal Server Error")
 		}
 		return c.SendStatus(http.StatusOK)
 	})
