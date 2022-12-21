@@ -7,6 +7,7 @@ RUN go build -o main cmd/transaction-consumer/*.go
 # Run stage
 FROM alpine:3.17
 WORKDIR /transaction-consumer
+COPY --from=builder /transaction-consumer/cmd/transaction-consumer/.env .
 COPY --from=builder /transaction-consumer/main .
 
 EXPOSE 3003
