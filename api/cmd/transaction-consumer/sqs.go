@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+
 	"github.com/aws/aws-sdk-go-v2/service/sqs"
 )
 
@@ -19,6 +20,9 @@ type SQSMessageAPI interface {
 	ReceiveMessage(ctx context.Context,
 		params *sqs.ReceiveMessageInput,
 		optFns ...func(*sqs.Options)) (*sqs.ReceiveMessageOutput, error)
+	DeleteMessage(ctx context.Context,
+		params *sqs.DeleteMessageInput,
+		optFns ...func(*sqs.Options)) (*sqs.DeleteMessageOutput, error)
 }
 
 // GetQueueURL gets the URL of an Amazon SQS queue.
@@ -64,4 +68,19 @@ func SendMsg(c context.Context, api SQSMessageAPI, input *sqs.SendMessageInput) 
 //	Otherwise, nil and an error from the call to ReceiveMessage.
 func GetMessages(c context.Context, api SQSMessageAPI, input *sqs.ReceiveMessageInput) (*sqs.ReceiveMessageOutput, error) {
 	return api.ReceiveMessage(c, input)
+}
+
+// RemoveMessage deletes a message from an Amazon SQS queue.
+// Inputs:
+//
+//	c is the context of the method call, which includes the AWS Region.
+//	api is the interface that defines the method call.
+//	input defines the input arguments to the service call.
+//
+// Output:
+//
+//	If success, a DeleteMessageOutput object containing the result of the service call and nil.
+//	Otherwise, nil and an error from the call to DeleteMessage.
+func RemoveMessage(c context.Context, api SQSMessageAPI, input *sqs.DeleteMessageInput) (*sqs.DeleteMessageOutput, error) {
+	return api.DeleteMessage(c, input)
 }

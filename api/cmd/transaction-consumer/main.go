@@ -110,9 +110,18 @@ func main() {
 					return nil
 				}); err != nil {
 					panic(err)
+				} else {
+					_, err = RemoveMessage(context.TODO(), client, &sqs.DeleteMessageInput{
+						QueueUrl:      queueURL,
+						ReceiptHandle: msgResult.Messages[0].ReceiptHandle,
+					})
+					if err != nil {
+						fmt.Println("Got an error deleting the message:")
+						panic(err)
+					}
 				}
 			} else {
-				fmt.Println("No messages found")
+				//fmt.Println("No messages found")
 			}
 		}
 	}()
