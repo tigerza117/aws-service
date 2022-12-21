@@ -79,7 +79,11 @@ func main() {
 	api := app.Group(baseUrl)
 
 	api.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
+		return c.SendString("This is GET -baseUrl-")
+	})
+
+	app.Get("/", func(c *fiber.Ctx) error {
+		return c.SendString("This is GET /")
 	})
 
 	if os.Getenv("SQS_ENABLE") == "TRUE" {
