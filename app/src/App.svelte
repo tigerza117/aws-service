@@ -1,35 +1,25 @@
 <script>
-  import Counter from './lib/Counter.svelte'
-  import Login from "./lib/Login.svelte"
-  import { Router, Link, Route } from "svelte-routing";
-  import Home from "./routes/Home.svelte";
-  import About from "./routes/About.svelte";
-  import Blog from "./routes/Blog.svelte";
-  import BlogPost from "./routes/BlogPost.svelte"
-  import { QueryClient, QueryClientProvider } from '@sveltestack/svelte-query'
-
-  const queryClient = new QueryClient()
-  const url = ""
+	import Router from 'svelte-spa-router'
+	import Home from './routes/Home.svelte'
+	import Login from './routes/Login.svelte'
+	import NotFound from './routes/NotFound.svelte'
+	import Register from './routes/Register.svelte'
+	import Profile from './routes/Profile.svelte'
+	import Transfer from './routes/Transfer.svelte';
+	import Deposit from './routes/Deposit.svelte';
+	import axios from 'axios'
+	const routes = {
+		'/':Home,
+		'/login':Login,
+		'/register': Register,
+		'/profile': Profile,
+		'/transfer': Transfer,
+		'/deposit': Deposit,
+		'*': NotFound,
+	}
+	axios.defaults.withCredentials = true
 </script>
 
-<main>
-  <QueryClientProvider client={queryClient}>
-    <Router url="{url}">
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="about">About</Link>
-        <Link to="blog">Blog</Link>
-      </nav>
-      <div>
-        <Route path="blog/:id" component="{BlogPost}" />
-        <Route path="blog" component="{Blog}" />
-        <Route path="about" component="{About}" />
-        <Route path="/"><Home /></Route>
-      </div>
-    </Router>
-  </QueryClientProvider>
-
-</main>
-
-<style>
-</style>
+<body>
+    <Router {routes}/>
+</body>

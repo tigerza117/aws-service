@@ -1,17 +1,19 @@
 <script>
     import axios from "axios";
-    import {link} from 'svelte-spa-router'
+    import {link, push} from 'svelte-spa-router'
     let name = "";
     let email = "";
     let password = "";
     
     function handleClick() {
     const data = { name: name, email: email, password: password };
-      axios.post("https://i-here-ji.tigerza117.xyz/register", data).then(result => {
+      axios.post("https://i-here-ji.tigerza117.xyz/register", data, {withCredentials: true}).then(result => {
             alert("Register Complete");
             name = '';
 			email = '';
 			password = '';
+            push('/login');
+            
 		}).catch(err => {
         console.log(err);
       });
