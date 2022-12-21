@@ -20,6 +20,7 @@ import (
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -128,6 +129,18 @@ func main() {
 		if err := c.BodyParser(&body); err != nil {
 			return err
 		}
+
+		// Check if some parameters are empty
+		if body.Email == "" {
+			return fiber.NewError(http.StatusBadRequest, "E-mail cannot be empty")
+		}
+		if body.Name == "" {
+			return fiber.NewError(http.StatusBadRequest, "Name cannot be empty")
+		}
+		if body.Password == "" {
+			return fiber.NewError(http.StatusBadRequest, "Password cannot be empty")
+		}
+
 		pHash, err := bcrypt.GenerateFromPassword([]byte(body.Password), 10)
 		if err != nil {
 			return err
@@ -138,6 +151,9 @@ func main() {
 			Password: string(pHash),
 			Accounts: nil,
 		}); err != nil {
+			if errors.Is(err, fs.ErrExist) {
+				return fiber.NewError(http.StatusBadRequest, "Error-1062")
+			}
 			return err
 		}
 		return c.SendStatus(http.StatusOK)
