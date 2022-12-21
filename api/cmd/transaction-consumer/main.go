@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"os"
 	"strconv"
 	"time"
 )
@@ -20,10 +21,10 @@ func main() {
 	flag.Parse()
 
 	if *queue == "" {
-		*queue = "transaction"
+		*queue = os.Getenv("SQS_NAME")
 	}
 
-	gormDB, err := gorm.Open(mysql.Open("root:pass@tcp(127.0.0.1:3306)/demo?charset=utf8mb4&parseTime=True&loc=Local"))
+	gormDB, err := gorm.Open(mysql.Open(os.Getenv("DB_DSN")))
 	if err != nil {
 		panic(err)
 	}
@@ -31,7 +32,7 @@ func main() {
 	query.SetDefault(gormDB)
 
 	cfg, err := config.LoadDefaultConfig(context.TODO(),
-		config.WithRegion("us-east-1"),
+		config.WithRegion(os.Getenv("SQS_REGION")),
 	)
 	if err != nil {
 		panic("configuration error, " + err.Error())
