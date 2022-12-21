@@ -382,15 +382,15 @@ func main() {
 			}
 
 			sMInput := &sqs.SendMessageInput{
-				QueueUrl:     queueURL,
-				DelaySeconds: 1,
+				QueueUrl: queueURL,
 				MessageAttributes: map[string]types.MessageAttributeValue{
 					"TxID": {
 						DataType:    aws.String("String"),
 						StringValue: aws.String(fmt.Sprintf("%d", t.ID)),
 					},
 				},
-				MessageBody: aws.String("HellO!"),
+				MessageBody:    aws.String("HellO!"),
+				MessageGroupId: aws.String("Group1"),
 			}
 
 			resp, err := SendMsg(context.TODO(), client, sMInput)
@@ -479,15 +479,15 @@ func main() {
 			}
 
 			sMInput := &sqs.SendMessageInput{
-				QueueUrl:     queueURL,
-				DelaySeconds: 1,
+				QueueUrl: queueURL,
 				MessageAttributes: map[string]types.MessageAttributeValue{
 					"TxID": {
 						DataType:    aws.String("String"),
 						StringValue: aws.String(fmt.Sprintf("%d", t.ID)),
 					},
 				},
-				MessageBody: aws.String("HellO!"),
+				MessageBody:    aws.String("HellO!"),
+				MessageGroupId: aws.String("Group2"),
 			}
 
 			resp, err := SendMsg(context.TODO(), client, sMInput)
