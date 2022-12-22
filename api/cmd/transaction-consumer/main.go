@@ -36,7 +36,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	gormDB.AutoMigrate(&model.Customer{}, &model.Account{}, &model.Tx{})
+	//gormDB.AutoMigrate(&model.Customer{}, &model.Account{}, &model.Tx{})
 	query.SetDefault(gormDB)
 
 	cfg, err := config.LoadDefaultConfig(context.TODO(),
