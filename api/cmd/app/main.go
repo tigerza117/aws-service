@@ -389,7 +389,7 @@ func main() {
 						StringValue: aws.String(fmt.Sprintf("%d", t.ID)),
 					},
 				},
-				MessageBody:    aws.String("HellO!"),
+				MessageBody:    aws.String(fmt.Sprintf("Transaction ID: %d", t.ID)),
 				MessageGroupId: aws.String("Group1"),
 			}
 
@@ -486,7 +486,7 @@ func main() {
 						StringValue: aws.String(fmt.Sprintf("%d", t.ID)),
 					},
 				},
-				MessageBody:    aws.String("HellO!"),
+				MessageBody:    aws.String(fmt.Sprintf("Transaction ID: %d", t.ID)),
 				MessageGroupId: aws.String("Group2"),
 			}
 
