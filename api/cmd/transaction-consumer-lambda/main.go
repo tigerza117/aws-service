@@ -4,21 +4,20 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/aws/aws-lambda-go/events"
 	"log"
 	"os"
 	"strconv"
 
 	"api/model"
 	"api/query"
-	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/service/sqs"
-	"github.com/aws/aws-sdk-go-v2/service/sqs/types"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
-func main() {
+func handler(ctx context.Context, sqsEvent events.SQSEvent) error {
 	err := godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
@@ -34,52 +33,14 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	gormDB.AutoMigrate(&model.Customer{}, &model.Account{}, &model.Tx{})
+	//gormDB.AutoMigrate(&model.Customer{}, &model.Account{}, &model.Tx{})
 	query.SetDefault(gormDB)
 
-	cfg, err := config.LoadDefaultConfig(context.TODO(),
-		config.WithRegion(os.Getenv("SQS_REGION")),
-	)
-	if err != nil {
-		panic("configuration error, " + err.Error())
-	}
-
-	client := sqs.NewFromConfig(cfg)
-
-	// Get URL of queue
-	gQInput := &sqs.GetQueueUrlInput{
-		QueueName: queue,
-	}
-
-	result, err := GetQueueURL(context.TODO(), client, gQInput)
-	if err != nil {
-		fmt.Println("Got an error getting the queue URL:")
-		fmt.Println(err)
-		return
-	}
-
-	queueURL := result.QueueUrl
-
-	gMInput := &sqs.ReceiveMessageInput{
-		MessageAttributeNames: []string{
-			string(types.QueueAttributeNameAll),
-		},
-		QueueUrl:            queueURL,
-		MaxNumberOfMessages: 1,
-		//VisibilityTimeout:   int32(100),
-	}
-
-	msgResult, err := GetMessages(context.TODO(), client, gMInput)
-	if err != nil {
-		fmt.Println("Got an error receiving messages:")
-		fmt.Println(err)
-		return
-	}
-
-	if msgResult.Messages != nil {
-		fmt.Println("Message ID:     " + *msgResult.Messages[0].MessageId)
-		fmt.Println("Message Handle: " + *msgResult.Messages[0].ReceiptHandle)
-		idStr := msgResult.Messages[0].MessageAttributes["TxID"].StringValue
+	//if msgResult.Messages != nil {
+	for i := 0; i < len(sqsEvent.Records); i++ {
+		fmt.Println("Message ID:     " + sqsEvent.Records[i].MessageId)
+		fmt.Println("Message Handle: " + sqsEvent.Records[i].ReceiptHandle)
+		idStr := sqsEvent.Records[i].MessageAttributes["TxID"].StringValue
 		id, err := strconv.Atoi(*idStr)
 		if err != nil {
 			panic(err)
@@ -106,16 +67,12 @@ func main() {
 		}); err != nil {
 			panic(err)
 		} else {
-			_, err = RemoveMessage(context.TODO(), client, &sqs.DeleteMessageInput{
-				QueueUrl:      queueURL,
-				ReceiptHandle: msgResult.Messages[0].ReceiptHandle,
-			})
-			if err != nil {
-				fmt.Println("Got an error deleting the message:")
-				panic(err)
-			}
 		}
-	} else {
-		fmt.Println("No messages found")
+		fmt.Printf("done %d\n", idStr)
 	}
+	return nil
+}
+
+func main() {
+	lambda.Start(handler)
 }
