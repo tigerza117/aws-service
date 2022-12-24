@@ -1,6 +1,7 @@
 <script>
     import NavBarComp from "../components/NavBarComp.svelte";
     import SideBarComp from "../components/SideBarComp.svelte";
+    import Footer from "../components/FooterComp.svelte";
     import axios from "axios";
     // import { link } from "svelte-spa-router";
     let name = "";
@@ -85,7 +86,7 @@
             </a>
             <div class="hidden w-full md:block md:w-auto" id="navbar-default">
                 <ul
-                    class="flex flex-col p-4 mt-4 border rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 bg-gray-800 md:bg-gray-900 border-gray-700"
+                    class="flex flex-col p-4 mt-4 border rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0"
                 >
                     <NavBarComp 
                         pagelink="/" 
@@ -187,20 +188,7 @@
         </div>
     </div>
 
-    <!-- footer -->
-    <footer
-        class="fixed h-[5%] bottom-0 left-0 z-20 p-4 w-full shadow md:flex md:items-center md:justify-between md:p-6 bg-gray-800 border-gray-600"
-    >
-        <span class="text-sm  sm:text-center text-gray-400"
-            >© 2022 <a href="https://flowbite.com/" class="hover:underline"
-                >Flowbite™</a
-            >. All Rights Reserved.
-        </span>
-        <ul
-            class="flex flex-wrap items-center mt-3 text-sm text-gray-400 sm:mt-0"
-        />
-    </footer>
-    <!-- footer -->
+    <Footer/>
 </div>
 
 <style>
