@@ -20,6 +20,6 @@
 	axios.defaults.withCredentials = true
 </script>
 
-<body>
-    <Router {routes}/>
-</body>
+<Router {routes}/>
+
+
