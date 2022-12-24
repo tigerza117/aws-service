@@ -82,14 +82,14 @@
       </div>
     </div>
   </nav>
-<!-- navbar -->
+<!-- navbar dark:bg-gray-900 -->
 
     <!-- <a href="/transfer" use:link>Transfer</a> -->
     <!-- <a href="/deposit" use:link>Deposit</a> -->
     <!-- <a href="/login" use:link>Logout</a> -->
 
-    <div class="grid grid-rows-3 grid-flow-col gap-4 w-96">
-        <div class="row-span-3 dark:bg-gray-900 dark:text-gray-400 w-1/4">
+    <div class="flex">
+        <div class="w-1/4 h-fit">
             <section>
                 <p class="text-5xl">INFORMATION</p>
                 <h2 class="text-2xl">Name: {name}</h2>
@@ -99,28 +99,31 @@
                 <h4>ID Updated: {idupdated_at}</h4>
             </section>
         </div>
-        <div class="col-span-2 dark:bg-gray-700 dark:text-gray-400 w-3/4">
-            <section>
-                <h1>Create New Bank Account</h1>
-                <input bind:value={new_account} type="new_account" name="new_account" placeholder=" Account Name"/>
-                <button on:click={handleClick}>Create</button>
-            </section>
-        </div>
-        <div class="row-span-2 col-span-2 dark:bg-gray-500 dark:text-gray-400 w-3/4">
-            <div class="user-bank-account">
-                {#each bank_accounts as bank_account}
-                <div class="ba-card">
-                    <!-- <p>Account</p> -->
-                    <h1>{bank_account.name}</h1>
-                    <h3>No.{bank_account.no}</h3>
-                    <h3>ID: {bank_account.id}</h3>
-                    <h2>Balance: {bank_account.balance}</h2>
-                    <h4>Account Created: {bank_account.created_at}</h4>
-                    <h4>Account Updated: {bank_account.updated_at}</h4>
+        <div class="w-3/4">
+            <div class="">
+                <section>
+                    <h1>Create New Bank Account</h1>
+                    <input bind:value={new_account} type="new_account" name="new_account" placeholder=" Account Name"/>
+                    <button on:click={handleClick}>Create</button>
+                </section>
+            </div>
+            <div class="">
+                <div class="user-bank-account">
+                    {#each bank_accounts as bank_account}
+                    <div class="ba-card">
+                        <!-- <p>Account</p> -->
+                        <h1>{bank_account.name}</h1>
+                        <h3>No.{bank_account.no}</h3>
+                        <h3>ID: {bank_account.id}</h3>
+                        <h2>Balance: {bank_account.balance}</h2>
+                        <h4>Account Created: {bank_account.created_at}</h4>
+                        <h4>Account Updated: {bank_account.updated_at}</h4>
+                    </div>
+                    {/each}
                 </div>
-                {/each}
             </div>
         </div>
+
     </div>
 
 
