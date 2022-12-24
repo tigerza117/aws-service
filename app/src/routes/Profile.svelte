@@ -2,7 +2,7 @@
     import NavBarComp from "../components/NavBarComp.svelte";
     import SideBarComp from "../components/SideBarComp.svelte";
     import axios from "axios";
-    import { link } from "svelte-spa-router";
+    // import { link } from "svelte-spa-router";
     let name = "";
     let new_account = "";
     let email = "";
@@ -80,7 +80,7 @@
                 />
                 <span
                     class="self-center text-xl font-semibold whitespace-nowrap text-white"
-                    >3X2</span
+                    >3X2 Banking</span
                 >
             </a>
             <div class="hidden w-full md:block md:w-auto" id="navbar-default">
@@ -111,11 +111,7 @@
             </div>
         </div>
     </nav>
-    <!-- navbar  -->
 
-    <!-- <a href="/transfer" use:link>Transfer</a> -->
-    <!-- <a href="/deposit" use:link>Deposit</a> -->
-    <!-- <a href="/login" use:link>Logout</a> -->
     <div class="flex max h-auto bg-gray-500">
         <div class="w-1/4 h-1/4">
             <div class="overflow-y-auto py-4 px-3 bg-gray-800 h-screen">
@@ -134,16 +130,12 @@
                     <h4 class="text-center text-zinc-100">ID Updated: {idupdated_at}</h4>
                 </ul>
             </div>
-            <!-- <h2 class="text-2xl">Name: {name}</h2>
-            <h2>Email: {email}</h2>
-            <h2>UserID: {userid}</h2>
-            <h4>ID Created: {idcreated_at}</h4>
-            <h4>ID Updated: {idupdated_at}</h4> -->
+
         </div>
-        <div class="w-3/4">
+        <div class="w-3/4 bg-gray-800">
             <div class="">
-                <section>
-                    <h1 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Create New Bank Account</h1>
+
+                    <h1 class="mb-2 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Create New Bank Account</h1>
                     <input
                     class="border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 text-white"
                         bind:value={new_account}
@@ -152,10 +144,9 @@
                         placeholder=" Account Name"
                     />
                     <button class="text-white w-full focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-800" on:click={handleClick}>Create</button>
-                </section>
             </div>
             <div class="">
-                <div class="flow-root overflow-y-auto h-[42rem] w-full">
+                <div class="flow-root overflow-y-auto h-[41.5rem] w-full">
                     {#each bank_accounts as bank_account}
                     <ul class="divide-y divide-gray-700 bg-gray-700" style="padding-left: 1%; border: white; border-style:groove;">
                         <li class="py-3 sm:py-4">
@@ -182,8 +173,8 @@
                                         Account Updated: {bank_account.updated_at}
                                     </p>
                                 </div>
-                                <div class="pr-4 column-flex justify-end text-base font-semibold text-white w-3/6">
-                                    <h1 class="text-4xl text-right">Balance:</h1>
+                                <div class="pr-5 column-flex justify-end text-base font-semibold text-white w-3/6">
+                                    <h1 class="text-4xl text-right">Balance: </h1>
                                     <h1 class="text-right text-8xl">${bank_account.balance}</h1>
                                 </div>
                             </div>
@@ -191,24 +182,7 @@
                     </ul>
                     {/each}
                 </div>
-                <!-- <div class="overflow-y-auto h-96 w-full">
-                    {#each bank_accounts as bank_account}
-                        <div>
-                        <div class="ba-card" style="border-style:dotted; width:100%">
-                            <!-- <p>Account</p> -->
-                            <!-- <h1>{bank_account.name}</h1>
-                            <h3>No.{bank_account.no}</h3>
-                            <h3>ID: {bank_account.id}</h3>
-                            <h2>Balance: {bank_account.balance}</h2>
-                            <h4>Account Created: {bank_account.created_at}</h4>
-                            <h4>Account Updated: {bank_account.updated_at}</h4>
-                        </div>
-                        <div class="ba-card" style="border-style:dotted; width:100%">
-                            <h2>Balance: {bank_account.balance}</h2>
-                        </div>
-                        </div>
-                    {/each}
-                </div> -->
+
             </div>
         </div>
     </div>
@@ -231,7 +205,7 @@
 
 <style>
 
-    section {
+    /* section {
         text-align: center;
         justify-content: center;
         width: 100%;
@@ -243,5 +217,5 @@
         margin-bottom: 10px;
         display: flex;
         flex-direction: column;
-    }
+    } */
 </style>
