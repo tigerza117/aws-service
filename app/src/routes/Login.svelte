@@ -12,8 +12,11 @@
 		alert("Invalid Username or password");
 	  });
 	}
+	
 </script>
+
 <style>
+
 body{
 	text-align: center;
 	justify-content: center;
@@ -25,7 +28,8 @@ button:hover{
 }
 </style>
 <body>
-	<h1>Log in</h1>
+	
+	<h1 class="text-3xl font-bold underline">Log in</h1>
 	<input bind:value={email} type="email" name="email" placeholder="Email"/>
 	<input bind:value={password} type="password" name="password" placeholder="Password"/>
 	<button on:click={handleClick}>Submit</button>
