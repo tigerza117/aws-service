@@ -1,7 +1,7 @@
 <script>
     import {link} from 'svelte-spa-router';
-    import NavBarComp from "../components/NavBarComp.svelte";
     import Footer from "../components/FooterComp.svelte";
+    import NavBarComp from '../components/NavBarComp.svelte';
 </script>
 
 
@@ -46,19 +46,6 @@
     </nav>
     <!-- navbar -->
 
-    <!-- <div class="flex max h-auto bg-gray-800">
-        <div class="rounded-full bg-gray-900 border-2 flex justify-center items-center p-60 w-10 h-10">
-            <div class="absolute w-full h-fit">
-                <h1 class="text-4xl font-medium text-center truncate text-gray-400">Welcome to</h1>
-                <h1 class="text-9xl font-bold text-center truncate text-gray-400">3x2</h1>
-                <h1 class="text-5xl font-medium text-center truncate text-gray-400 h-20">Banking</h1>
-            </div>
-        </div>
-        <div>
-            <p>Have an account? <a href="/login" use:link>Login</a></p>
-            <p>Become our member! <a href="/Register" use:link>Register</a></p>
-        </div>
-    </div> -->
     <div class="flex flex-col max h-screen bg-gray-800 justify-center items-center pb-40">
         <div class="rounded-full bg-gray-900 border-2 flex justify-center items-center p-60 w-10 h-10">
             <div class="absolute w-full h-fit">
@@ -78,27 +65,6 @@
             </div>
         </div>
     </div>
-
-    <!-- <footer
-        class="fixed h-[5%] bottom-0 left-0 z-20 p-4 w-full shadow md:flex md:items-center md:justify-between md:p-6 bg-gray-800 border-gray-600"
-        >
-        <span class="text-sm  sm:text-center text-gray-400"
-            >© 2022 <a href="https://flowbite.com/" class="hover:underline"
-                >3X2™</a
-            >. All Rights Reserved.
-        </span>
-        <ul
-            class="flex flex-wrap items-center mt-3 text-sm text-gray-400 sm:mt-0"
-        />
-    </footer> -->
     <Footer/>
 </div>
 
-<style>
-    /* body{
-        text-align: center;
-        justify-content: center;
-        height: 100vh;
-        width: 100vw;
-    } */
-</style>

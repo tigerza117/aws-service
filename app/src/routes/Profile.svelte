@@ -1,9 +1,10 @@
+<!-- Profile & Account Page -->
 <script>
     import NavBarComp from "../components/NavBarComp.svelte";
     import SideBarComp from "../components/SideBarComp.svelte";
     import Footer from "../components/FooterComp.svelte";
     import axios from "axios";
-    // import { link } from "svelte-spa-router";
+    import { link } from "svelte-spa-router";
     let name = "";
     let new_account = "";
     let email = "";
@@ -56,13 +57,13 @@
         axios
             .put("https://i-here-ji.tigerza117.xyz/account", data)
             .then((result) => {
-                alert("Create Complete");
                 new_account = "";
                 reload();
             })
             .catch((err) => {
                 console.log(err);
-                alert(err);
+                alert("Invalid Name, please input Another Unique Account Name");
+                new_account = "";
             });
     }
 </script>
@@ -190,20 +191,3 @@
 
     <Footer/>
 </div>
-
-<style>
-
-    /* section {
-        text-align: center;
-        justify-content: center;
-        width: 100%;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        padding: 10px;
-        box-shadow: 2px 2px 4px #dedede;
-        border: 1px solid #888;
-        margin-bottom: 10px;
-        display: flex;
-        flex-direction: column;
-    } */
-</style>
