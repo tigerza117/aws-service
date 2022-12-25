@@ -14,7 +14,7 @@
     let bank_accounts = [];
 
     axios
-        .get("https://i-here-ji.tigerza117.xyz/profile")
+        .get("https://dmce1m4ypodn6.cloudfront.net:443/api/profile")
         .then(function (response) {
             if (response.data) {
                 console.log(JSON.stringify(response.data));
@@ -35,7 +35,7 @@
 
     function reload() {
         axios
-            .get("https://i-here-ji.tigerza117.xyz/accounts")
+            .get("https://dmce1m4ypodn6.cloudfront.net:443/api/accounts")
             .then(function (response) {
                 if (response.data) {
                     console.log(JSON.stringify(response.data));
@@ -55,7 +55,7 @@
     function handleClick() {
         const data = { name: new_account };
         axios
-            .put("https://i-here-ji.tigerza117.xyz/account", data)
+            .put("https://dmce1m4ypodn6.cloudfront.net:443/api/account", data)
             .then((result) => {
                 new_account = "";
                 reload();

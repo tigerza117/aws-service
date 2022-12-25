@@ -19,7 +19,7 @@
             data.append('id', acc_id);
 			data.append('acc', des_acc);
 			data.append('amount', amount_tra);
-            axios.post("https://i-here-ji.tigerza117.xyz/transfer", data, {withCredentials: true}).then(function (response) {
+            axios.post("https://dmce1m4ypodn6.cloudfront.net:443/api/transfer", data, {withCredentials: true}).then(function (response) {
                 console.log(JSON.stringify(response.data));
                 alert("Transfer Complete");
                 acc_id = ''
@@ -38,7 +38,7 @@
         data.append('id', acc_id);
 		data.append('acc', des_acc);
 		data.append('amount', amount_tra);
-        axios.post("https://i-here-ji.tigerza117.xyz/pre-transfer", data, {withCredentials: true}).then(function (response) {
+        axios.post("https://dmce1m4ypodn6.cloudfront.net:443/api/pre-transfer", data, {withCredentials: true}).then(function (response) {
             console.log(JSON.stringify(response.data));
             alert("Account Confirmed. Please sumbit");
             check_status = 1
@@ -51,7 +51,7 @@
     }
 
     function reload(){
-        axios.get('https://i-here-ji.tigerza117.xyz/accounts').then(function (response) {
+        axios.get('https://dmce1m4ypodn6.cloudfront.net:443/api/accounts').then(function (response) {
             if (response.data) {
                 console.log(JSON.stringify(response.data));
                 console.log(response.data.name)
