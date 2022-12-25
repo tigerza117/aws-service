@@ -1,3 +1,4 @@
+<!-- Not-Found Page -->
 <script>
     import {link} from 'svelte-spa-router';
     import Footer from "../components/FooterComp.svelte";
@@ -49,19 +50,9 @@
     <div class="flex flex-col max h-screen bg-gray-800 justify-center items-center pb-40">
         <div class="rounded-full bg-gray-900 border-2 flex justify-center items-center p-60 w-10 h-10">
             <div class="absolute w-full h-fit">
-                <h1 class="text-5xl italic font-medium text-center truncate text-gray-400">Welcome To</h1>
-                <h1 class="text-9xl font-bold text-center truncate text-gray-400">3X2</h1>
-                <h1 class="text-6xl italic font-medium text-center truncate text-gray-400 h-20">Banking</h1>
-            </div>
-        </div>
-        <div class="flex pt-5 w-1/4 space-x-5">
-            <div class="w-1/2 text-gray-100">
-                <h1 class="text-center text-xl">Have An Account? </h1>
-                <h1 class="text-center text-6xl"><a href="/login" use:link class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Login</a></h1>
-            </div>
-            <div class="w-1/2 text-gray-100">
-                <h1 class="text-center text-xl">Become Our Member! </h1>
-                <h1 class="text-center text-6xl"><a href="/register" use:link class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Register</a></h1>
+                <h1 class="text-5xl italic font-medium text-center truncate text-gray-400">NOT</h1>
+                <!-- <h1 class="text-9xl font-bold text-center truncate text-gray-400">3X2</h1> -->
+                <h1 class="text-5xl italic font-medium text-center truncate text-gray-400 h-20">FOUND</h1>
             </div>
         </div>
     </div>
