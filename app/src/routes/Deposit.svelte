@@ -17,7 +17,7 @@
         else{
             data.append('acc', acc_dep);
             data.append('amount', amount_dep)
-            axios.post("https://dmce1m4ypodn6.cloudfront.net:443/api/deposit", data, {withCredentials: true}).then(function (response) {
+            axios.post("/deposit", data, {withCredentials: true}).then(function (response) {
                 console.log(JSON.stringify(response.data));
                 alert("Deposit Complete");
                 acc_dep = ''
@@ -34,7 +34,7 @@
     function checkState(){
         data.append('acc', acc_dep);
         data.append('amount', amount_dep)
-        axios.post("https://dmce1m4ypodn6.cloudfront.net:443/api/pre-deposit", data, {withCredentials: true}).then(function (response) {
+        axios.post("/pre-deposit", data, {withCredentials: true}).then(function (response) {
             console.log(JSON.stringify(response.data));
             alert("Account Confirmed. Please submit");
             check_status = 1
@@ -47,7 +47,7 @@
     }
 
     function reload(){
-        axios.get('https://dmce1m4ypodn6.cloudfront.net:443/api/accounts').then(function (response) {
+        axios.get('/accounts').then(function (response) {
             if (response.data) {
                 console.log(JSON.stringify(response.data));
                 console.log(response.data.name)

@@ -8,7 +8,7 @@
 	let password = "";
 	function handleClick() {
 	const data = { email: email, password: password };
-	  axios.post("https://Backend-LB-1928138910.us-east-1.elb.amazonaws.com/api/login", data, {withCredentials: true}).then(result => {
+	  axios.post("/login", data, {withCredentials: true}).then(result => {
 			push('/profile');
 			alert("Login Complete");
 	  }).catch(err => {
