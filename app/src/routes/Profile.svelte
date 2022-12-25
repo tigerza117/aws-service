@@ -105,7 +105,7 @@
                         home={false}
                     />
                     <NavBarComp
-                        pagelink="/login"
+                        pagelink="/logout"
                         pagename="Logout"
                         home={false}
                     />

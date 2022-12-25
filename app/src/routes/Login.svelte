@@ -8,10 +8,11 @@
 	let password = "";
 	function handleClick() {
 	const data = { email: email, password: password };
-	  axios.post("https://dmce1m4ypodn6.cloudfront.net:443/api/login", data, {withCredentials: true}).then(result => {
+	  axios.post("https://Backend-LB-1928138910.us-east-1.elb.amazonaws.com/api/login", data, {withCredentials: true}).then(result => {
 			push('/profile');
 			alert("Login Complete");
 	  }).catch(err => {
+		console.log(err);
 		alert("Invalid Username or Password");
 	  });
 	}
@@ -60,7 +61,7 @@
 
     <div class="flex flex-col max h-screen bg-gray-800 justify-center items-center pb-40">
 		<div class="w-full max-w-sm p-4 rounded-lg shadow-md sm:p-6 md:p-8 bg-gray-700 border-gray-700">
-			<form class="space-y-8 w-full" action="#">
+			<div class="space-y-8 w-full">
 				<h5 class="text-3xl italic text-center font-medium text-white">Sign In To Our Platform</h5>
 				<div>
 					<label for="email" class="block mb-2 text-xl font-medium text-white">Your E-mail:</label>
@@ -74,7 +75,7 @@
 				<div class="text-center text-lg font-medium text-gray-300">
 					Not Registered? <a href="/Register" use:link class="hover:underline text-blue-500">Create Account</a>
 				</div>
-			</form>
+			</div>
 		</div>
     </div>
 

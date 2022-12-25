@@ -7,6 +7,7 @@
 	import Profile from './routes/Profile.svelte';
 	import Transfer from './routes/Transfer.svelte';
 	import Deposit from './routes/Deposit.svelte';
+	import Logout from './routes/Logout.svelte';
 	import axios from 'axios'
 	const routes = {
 		'/':Home,
@@ -15,6 +16,7 @@
 		'/profile': Profile,
 		'/transfer': Transfer,
 		'/deposit': Deposit,
+		'/logout': Logout,
 		'*': NotFound,
 	}
 	axios.defaults.withCredentials = true

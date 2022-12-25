@@ -1,6 +1,6 @@
 <!-- Not-Found Page -->
 <script>
-    import {link} from 'svelte-spa-router';
+    // import {link} from 'svelte-spa-router';
     import Footer from "../components/FooterComp.svelte";
     import NavBarComp from '../components/NavBarComp.svelte';
 </script>

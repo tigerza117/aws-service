@@ -10,7 +10,7 @@
     
     function handleClick() {
     const data = { name: name, email: email, password: password };
-      axios.post("https://dmce1m4ypodn6.cloudfront.net:443/api/register", data, {withCredentials: true}).then(result => {
+      axios.post("https://dmce1m4ypodn6.cloudfront.net/api/register", data, {withCredentials: true}).then(result => {
             alert("Register Complete");
             name = '';
 			email = '';
@@ -77,7 +77,7 @@
 				</div>
 				<div>
 					<label for="password"  class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Enter Your Password:</label>
-					<input type="password" bind:value={password} name="password" id="password" placeholder="••••••••••••••••" class=" text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 placeholder-gray-400 text-white" required>
+					<input type="password" bind:value={password} name="password" id="password" placeholder="•••••••••" class=" text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 placeholder-gray-400 text-white" required>
 				</div>
 				<button on:click={handleClick} class="w-full focus:ring-4 focus:outline-none rounded-lg text-xl font-bold px-5 py-2.5 text-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-800">Register Your Account</button>
 				<div class="text-center text-lg font-medium text-gray-300">
