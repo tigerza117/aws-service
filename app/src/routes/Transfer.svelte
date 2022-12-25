@@ -40,7 +40,7 @@
 		data.append('amount', amount_tra);
         axios.post("https://dmce1m4ypodn6.cloudfront.net:443/api/pre-transfer", data, {withCredentials: true}).then(function (response) {
             console.log(JSON.stringify(response.data));
-            alert("Account Confirmed. Please sumbit");
+            alert("Account Confirmed. Please submit");
             check_status = 1
         }).catch(function (error) {
             console.log(error);

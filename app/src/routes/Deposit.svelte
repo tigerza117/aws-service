@@ -36,7 +36,7 @@
         data.append('amount', amount_dep)
         axios.post("https://dmce1m4ypodn6.cloudfront.net:443/api/pre-deposit", data, {withCredentials: true}).then(function (response) {
             console.log(JSON.stringify(response.data));
-            alert("Account Confirmed. Please sumbit");
+            alert("Account Confirmed. Please submit");
             check_status = 1
         }).catch(function (error) {
             console.log(error);
