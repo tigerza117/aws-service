@@ -116,7 +116,7 @@
         <div class="w-1/4 h-1/4">
             <div class="overflow-y-auto py-4 px-3 bg-gray-800 h-screen">
                 <div style="justify-content: center; align-item:center; display:flex; padding: 3%; ">
-                    <h1 class="pt-10 mb-2 text-center text-7xl font-bold tracking-tight text-gray-900 dark:text-white">Transfer</h1>
+                    <h1 class="pt-10 mb-2 text-center text-7xl font-bold tracking-tight text-white">Transfer</h1>
                 </div>
                 <ul class="space-y-6 pt-16">
                         <div class="">

@@ -66,25 +66,25 @@
 
     <div class="flex flex-col max h-screen bg-gray-800 justify-center items-center pb-40">
 		<div class="w-full max-w-sm p-4 rounded-lg shadow-md sm:p-6 md:p-8 bg-gray-700 border-gray-700">
-			<form class="space-y-8 w-full">
+			<div class="space-y-8 w-full">
 				<h5 class="text-3xl italic text-center font-medium text-white">Sign In To Our Platform</h5>
                 <div>
 					<label for="name" class="block mb-2 text-xl font-medium text-white">Enter Your Full Name:</label>
-					<input type="name" bind:value={name} name="name" id="name" class="border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 placeholder-gray-400 text-white" placeholder="John Doe" required>
+					<input type="name" bind:value={name} name="name" id="name" class="border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 placeholder-gray-400 text-white" placeholder="Name" required>
 				</div>
 				<div>
 					<label for="email" class="block mb-2 text-xl font-medium text-white">Enter Your E-mail:</label>
 					<input type="email" bind:value={email} name="email" id="email" class="border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 placeholder-gray-400 text-white" placeholder="Name@email.com" required>
 				</div>
 				<div>
-					<label for="password"  class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Enter Your Password:</label>
+					<label for="password"  class="block mb-2 text-xl font-medium text-white">Enter Your Password:</label>
 					<input type="password" bind:value={password} name="password" id="password" placeholder="•••••••••" class=" text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 placeholder-gray-400 text-white" required>
 				</div>
 				<button on:click={handleClick} class="w-full focus:ring-4 focus:outline-none rounded-lg text-xl font-bold px-5 py-2.5 text-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-800">Register Your Account</button>
 				<div class="text-center text-lg font-medium text-gray-300">
 					Have An Account? <a href="/login" use:link class="hover:underline text-blue-500">Login Your Account</a>
 				</div>
-			</form>
+			</div>
 		</div>
     </div>
 
