@@ -10,7 +10,7 @@
     
     function handleClick() {
     const data = { name: name, email: email, password: password };
-      axios.post("https://dmce1m4ypodn6.cloudfront.net:443/api/register", data, {withCredentials: true}).then(result => {
+      axios.post("/register", data, {withCredentials: true}).then(result => {
             alert("Register Complete");
             name = '';
 			email = '';

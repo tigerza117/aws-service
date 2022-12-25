@@ -8,7 +8,7 @@
 	let password = "";
 	function handleClick() {
 	const data = { email: email, password: password };
-	  axios.post("https://dmce1m4ypodn6.cloudfront.net:443/api/login", data, {withCredentials: true}).then(result => {
+	  axios.post("/login", data, {withCredentials: true}).then(result => {
 			push('/profile');
 			alert("Login Complete");
 	  }).catch(err => {
