@@ -22,26 +22,6 @@
       });
     }
 </script>
-<!-- <style>
-body{
-    text-align: center;
-    justify-content: center;
-}
-button:hover{
-	background-color: #22d07e;
-	color: white;
-	cursor: pointer;
-}
-</style>
-
-<body>
-    <h1>Register</h1>
-    <input bind:value={name} type="name" name="name" placeholder="Name"/>
-    <input bind:value={email} type="email" name="email" placeholder="Email"/>
-    <input bind:value={password} type="password" name="password" placeholder="Password"/>
-    <button on:click={handleClick}>Submit</button>
-    <p>Have an account? <a href="/login" use:link>Login</a></p>
-</body> -->
 
 <div style="overflow: hidden; background-color: black; max-width:100%; width:100%; max-height:100vh;" class="font-medium">
 
@@ -99,7 +79,6 @@ button:hover{
 					<label for="password"  class="block mb-2 text-xl font-medium text-gray-900 dark:text-white">Enter Your Password:</label>
 					<input type="password" bind:value={password} name="password" id="password" placeholder="••••••••••••••••" class=" text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 placeholder-gray-400 text-white" required>
 				</div>
-                <!-- <button on:click={handleClick}>Submit</button> -->
 				<button on:click={handleClick} class="w-full focus:ring-4 focus:outline-none rounded-lg text-xl font-bold px-5 py-2.5 text-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-800">Register Your Account</button>
 				<div class="text-center text-lg font-medium text-gray-300">
 					Have An Account? <a href="/login" use:link class="hover:underline text-blue-500">Login Your Account</a>

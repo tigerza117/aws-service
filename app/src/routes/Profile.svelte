@@ -90,10 +90,10 @@
                     class="flex flex-col p-4 mt-4 border rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0"
                 >
                     <NavBarComp 
-                        pagelink="/" 
-                        pagename="Home" 
-                        home={true} 
-                    />
+                    pagelink="/profile" 
+                    pagename="Profile" 
+                    home={true} 
+                />
                     <NavBarComp
                         pagelink="/transfer"
                         pagename="Transfer"

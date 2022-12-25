@@ -55,16 +55,6 @@
                 <h1 class="text-5xl italic font-medium text-center truncate text-gray-400 h-20">FOUND</h1>
             </div>
         </div>
-        <!-- <div class="flex pt-5 w-1/4 space-x-5">
-            <div class="w-1/2 text-gray-100">
-                <h1 class="text-center text-xl">Have An Account? </h1>
-                <h1 class="text-center text-6xl"><a href="/login" use:link class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Login</a></h1>
-            </div>
-            <div class="w-1/2 text-gray-100">
-                <h1 class="text-center text-xl">Become Our Member! </h1>
-                <h1 class="text-center text-6xl"><a href="/register" use:link class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Register</a></h1>
-            </div>
-        </div> -->
     </div>
     <Footer/>
 </div>
