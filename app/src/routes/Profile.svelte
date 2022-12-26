@@ -1,193 +1,270 @@
 <!-- Profile & Account Page -->
 <script>
-    import NavBarComp from "../components/NavBarComp.svelte";
-    import SideBarComp from "../components/SideBarComp.svelte";
-    import Footer from "../components/FooterComp.svelte";
-    import axios from "axios";
-    import { link } from "svelte-spa-router";
-    let name = "";
-    let new_account = "";
-    let email = "";
-    let userid = "";
-    let idcreated_at = "";
-    let idupdated_at = "";
-    let bank_accounts = [];
+  import SideBarComp from "../components/SideBarComp.svelte";
+  import axios from "axios";
+  import { onMount } from "svelte";
+  import Deposit from "../components/Deposit.svelte";
+  import Transfer from "../components/Transfer.svelte";
 
+  let name = "";
+  let new_account = "";
+  let email = "";
+  let userid = "";
+  let idcreated_at = "";
+  let idupdated_at = "";
+  let bank_accounts = [
+    {
+      name: "Personal",
+      no: "1212312312312",
+      balance: 10000
+    },
+    {
+      name: "Saving",
+      no: "3429873423423",
+      balance: 10000
+    }
+  ];
+
+  axios
+    .get("/profile")
+    .then(function (response) {
+      if (response.data) {
+        console.log(JSON.stringify(response.data));
+        console.log(response.data.name);
+        name = response.data.name;
+        email = response.data.email;
+        userid = response.data.id;
+        idcreated_at = response.data.created_at;
+        idupdated_at = response.data.updated_at;
+        bank_accounts = response.data.account;
+      } else {
+        console.log("No data received from the server");
+      }
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+  function reload() {
     axios
-        .get("/profile")
-        .then(function (response) {
-            if (response.data) {
-                console.log(JSON.stringify(response.data));
-                console.log(response.data.name);
-                name = response.data.name;
-                email = response.data.email;
-                userid = response.data.id;
-                idcreated_at = response.data.created_at;
-                idupdated_at = response.data.updated_at;
-                bank_accounts = response.data.account;
-            } else {
-                console.log("No data received from the server");
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+      .get("/accounts")
+      .then(function (response) {
+        if (response.data) {
+          console.log(JSON.stringify(response.data));
+          console.log(response.data.name);
+          bank_accounts = response.data;
+        } else {
+          console.log("No data received from the server");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
 
-    function reload() {
-        axios
-            .get("/accounts")
-            .then(function (response) {
-                if (response.data) {
-                    console.log(JSON.stringify(response.data));
-                    console.log(response.data.name);
-                    bank_accounts = response.data;
-                } else {
-                    console.log("No data received from the server");
-                }
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
-    }
-    reload();
+  reload();
 
-    // /*Create Bank Account*/
-    function handleClick() {
-        const data = { name: new_account };
-        axios
-            .put("/account", data)
-            .then((result) => {
-                new_account = "";
-                reload();
-            })
-            .catch((err) => {
-                console.log(err);
-                alert("Invalid Name, please input Another Unique Account Name");
-                new_account = "";
-            });
+  // /*Create Bank Account*/
+  function handleClick() {
+    const data = { name: new_account };
+    axios
+      .put("/account", data)
+      .then((result) => {
+        new_account = "";
+        reload();
+      })
+      .catch((err) => {
+        console.log(err);
+        alert("Invalid Name, please input Another Unique Account Name");
+        new_account = "";
+      });
+  }
+
+  function createHex() {
+    var hexCode1 = "";
+    var hexValues1 = "0123456789abcdef";
+
+    for (var i = 0; i < 6; i++) {
+      hexCode1 += hexValues1.charAt(
+        Math.floor(Math.random() * hexValues1.length)
+      );
     }
+    return hexCode1;
+  }
+
+  function gen() {
+    const deg = Math.floor(Math.random() * 360);
+    return "linear-gradient(" +
+      deg +
+      "deg, " +
+      "#" +
+      createHex() +
+      ", " +
+      "#" +
+      createHex() +
+      ")"
+  }
+
+  let  avatarUrl = ""
+
+  onMount(() => {
+   fetch("https://randomuser.me/api/")
+      .then((results) => {
+        return results.json();
+      }).then(u => avatarUrl = u.results[0].picture.large);
+
+
+  })
 </script>
+<section class="h-full pt-32 pb-24 px-4 md:px-0">
+  <div class="max-w-2xl mx-auto h-full">
+    <div class="">
+      <section class="rounded bg-white p-4 dark:bg-gray-900">
+        <div>
+          <div
+            class="relative mb-16 h-48 w-full rounded"
+            style="background: {gen()}"
+          >
+            <div class="absolute top-[50%] md:left-10">
+              <img
+                src="{avatarUrl}"
+                class="w-48 rounded-full border-8 border-white"
+              />
+            </div>
+          </div>
+        </div>
+        <hr class="mt-28 my-6"/>
+        <div class="px-4">
+          <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+            Profile
+          </h2>
 
-
-<div style="overflow: hidden; background-color: black; max-width:100%; width:100%; max-height:100vh;">
-        
-    <!-- navbar -->
-    <nav class="w-full h-[10%] border-gray-200 px-2 sm:px-4 py-2.5 rounded bg-gray-900">
-        <div class="container flex flex-wrap items-center justify-between mx-auto">
-            <a href="https://flowbite.com/" class="flex items-center">
-                <img
-                    src="https://flowbite.com/docs/images/logo.svg"
-                    class="h-6 mr-3 sm:h-9"
-                    alt="Flowbite Logo"
-                />
-                <span
-                    class="self-center text-xl font-semibold whitespace-nowrap text-white"
-                    >3X2 Banking</span
+          <div action="#">
+            <div class="mb-4 grid gap-4 sm:mb-5 sm:grid-cols-2 sm:gap-6">
+              <div class="w-full">
+                <label
+                  for="firstName"
+                  class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
                 >
-            </a>
-            <div class="hidden w-full md:block md:w-auto" id="navbar-default">
-                <ul
-                    class="flex flex-col p-4 mt-4 border rounded-lg md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0"
-                >
-                    <NavBarComp 
-                    pagelink="/profile" 
-                    pagename="Profile" 
-                    home={true} 
+                  First name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="firstName"
+                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
+                  value="Apple iMac 27&ldquo;"
+                  placeholder="John"
+                  required=""
+                  disabled
                 />
-                    <NavBarComp
-                        pagelink="/transfer"
-                        pagename="Transfer"
-                        home={false}
-                    />
-                    <NavBarComp
-                        pagelink="/deposit"
-                        pagename="Deposit"
-                        home={false}
-                    />
-                    <NavBarComp
-                        pagelink="/logout"
-                        pagename="Logout"
-                        home={false}
-                    />
-                </ul>
+              </div>
+              <div class="w-full">
+                <label
+                  for="lastName"
+                  class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  First name
+                </label>
+                <input
+                  type="text"
+                  name="name"
+                  id="lastName"
+                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
+                  value="Apple iMac 27&ldquo;"
+                  placeholder="John"
+                  required=""
+                  disabled
+                />
+              </div>
+              <div class="w-full">
+                <label
+                  for="email"
+                  class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
+                  value="Apple"
+                  placeholder="Doe"
+                  required=""
+                  disabled
+                />
+              </div>
+              <div class="w-full">
+                <label
+                  for="email"
+                  class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  class="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-primary-600 focus:ring-primary-600 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-primary-500 dark:focus:ring-primary-500"
+                  value="Apple"
+                  placeholder="Doe"
+                  required=""
+                  disabled
+                />
+              </div>
             </div>
+          </div>
         </div>
-    </nav>
-
-    <div class="flex max h-auto bg-gray-500">
-        <div class="w-1/4 h-1/4">
-            <div class="overflow-y-auto py-4 px-3 bg-gray-800 h-screen">
-                <div style="justify-content: center; align-item:center; display:flex; padding: 3%; ">
-                    <img
-                        style="width: 200px; height: 200px; border-radius:100%; background-color:azure;"
-                        src="https://static.thenounproject.com/png/4738596-200.png"
-                        alt="profile-icon"
-                    />
+        <hr class="my-6"/>
+        <div class="px-4">
+          <div class="justify-between flex">
+            <h2 class="mb-4 text-xl font-bold text-gray-900 dark:text-white">
+              Accounts
+            </h2>
+            <div>
+              <button class="p-1 px-4 rounded bg-primary-600 text-white">
+                <span class="material-icons align-middle">add</span> Create Account
+              </button>
+            </div>
+          </div>
+          <div class="mb-4 space-y-4 overflow-x-scroll overflow-auto">
+            {#each bank_accounts as bank_account}
+              <div class="min-w-[24em] w-full p-4 rounded text-white" style="background: {gen()}">
+                <div class="flex justify-between">
+                  <div class="space-y-2">
+                    <div>
+                      {bank_account.name}
+                    </div>
+                   <div class="flex items-center ">
+                     <div>
+                       {bank_account.no}
+                     </div>
+                     <button class="px-2 ">
+                       <span class="material-icons align-middle" style="font-size: 1em">content_copy</span>
+                     </button>
+                   </div>
+                  </div>
+                  <div >
+                   <div class="text-3xl font-bold">
+                     {bank_account.balance.toLocaleString('th-TH', {
+                       style: 'currency',
+                       currency: 'THB',
+                     })}
+                   </div>
+                    <div class="flex justify-end">
+                      <Transfer />
+                      <Deposit />
+                    </div>
+                  </div>
                 </div>
-                <ul class="space-y-2">
-                    <SideBarComp sidename1="Name" sidename2={name} />
-                    <SideBarComp sidename1="Email" sidename2={email} />
-                    <SideBarComp sidename1="User-ID" sidename2={userid} /><br>
-                    <h4 class="text-center text-zinc-100">ID Created: {idcreated_at}</h4>
-                    <h4 class="text-center text-zinc-100">ID Updated: {idupdated_at}</h4>
-                </ul>
-            </div>
+              </div>
+            {/each}
+          </div>
 
         </div>
-        <div class="w-3/4 bg-gray-800">
-            <div class="">
 
-                    <h1 class="mb-2 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white">Create New Bank Account</h1>
-                    <input
-                    class="border text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 bg-gray-600 border-gray-500 text-white"
-                        bind:value={new_account}
-                        type="new_account"
-                        name="new_account"
-                        placeholder=" Account Name"
-                    />
-                    <button class="text-white w-full focus:ring-4 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 text-center bg-blue-600 hover:bg-blue-700 focus:ring-blue-800" on:click={handleClick}>Create</button>
-            </div>
-            <div class="">
-                <div class="flow-root overflow-y-auto h-[41.5rem] w-full">
-                    {#each bank_accounts as bank_account}
-                    <ul class="divide-y divide-gray-700 bg-gray-700" style="padding-left: 1%; border: white; border-style:groove;">
-                        <li class="py-3 sm:py-4">
-                            <div class="flex items-center space-x-4">
-                                <div class="flex-1 min-w-0 w-3/6">
-                                    <div class="flex">
-                                        <div class="pr-2">
-                                            <p class="text-6xl font-medium truncate text-white">
-                                            {bank_account.name}
-                                            </p>
-                                        </div>
-                                        <div class="flex justify-center items-end">
-                                            <p class="text-2xl truncate text-gray-400">ID: {bank_account.id}</p>
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <p class="text-3xl truncate text-gray-400">
-                                        No.{bank_account.no} 
-                                    </p>
-                                    <br><p class="text-sm truncate text-gray-400">
-                                        Account Created: {bank_account.created_at}
-                                    </p>
-                                    <p class="text-sm truncate text-gray-400">
-                                        Account Updated: {bank_account.updated_at}
-                                    </p>
-                                </div>
-                                <div class="pr-5 column-flex justify-end text-base font-semibold text-white w-3/6">
-                                    <h1 class="text-4xl text-right">Balance: </h1>
-                                    <h1 class="text-right text-8xl">${bank_account.balance}</h1>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                    {/each}
-                </div>
-
-            </div>
-        </div>
+      </section>
     </div>
-
-    <Footer/>
-</div>
+  </div>
+</section>

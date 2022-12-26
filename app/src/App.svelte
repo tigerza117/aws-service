@@ -1,27 +1,38 @@
 <script>
-	import Router from 'svelte-spa-router';
-	import Home from './routes/Home.svelte';
-	import Login from './routes/Login.svelte';
-	import NotFound from './routes/NotFound.svelte';
-	import Register from './routes/Register.svelte';
-	import Profile from './routes/Profile.svelte';
-	import Transfer from './routes/Transfer.svelte';
-	import Deposit from './routes/Deposit.svelte';
-	import Logout from './routes/Logout.svelte';
-	import axios from 'axios'
-	const routes = {
-		'/':Home,
-		'/login':Login,
-		'/register': Register,
-		'/profile': Profile,
-		'/transfer': Transfer,
-		'/deposit': Deposit,
-		'/logout': Logout,
-		'*': NotFound,
-	}
-	axios.defaults.withCredentials = true
+  import Foot from "./components/Foot.svelte";
+  import { Route, Router } from "svelte-navigator";
+  import Login from "./routes/Login.svelte";
+  import Register from "./routes/Register.svelte";
+  import Profile from "./routes/Profile.svelte";
+  import Transfer from "./routes/Transfer.svelte";
+  import Deposit from "./routes/Deposit.svelte";
+  import Navbar from "./components/Navbar.svelte";
+  import { isLogin } from "./stores/auth";
+  import PrivateRoute from "./routes/PrivateRoute.svelte";
+  import PublicRoute from "./routes/PublicRoute.svelte";
+
+
 </script>
+<link
+  href="https://fonts.googleapis.com/icon?family=Material+Icons"
+  rel="stylesheet"
+/>
+<div class="h-full min-h-screen min-w-full">
+  <Navbar />
+  <div class="mx-auto min-h-screen w-full bg-gray-200">
+    <Router>
+      <PublicRoute path="/auth/*">
+        <Route path="login" component="{Login}" />
+        <Route path="register" component="{Register}" />
+      </PublicRoute>
 
-<Router {routes}/>
+      <PrivateRoute path="/*">
+        <Route path="" component="{Profile}" />
+        <Route path="transfer" component="{Transfer}" />
+        <Route path="deposit" component="{Deposit}" />
+      </PrivateRoute>
+    </Router>
+  </div>
 
-
+  <Foot />
+</div>

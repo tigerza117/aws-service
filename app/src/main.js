@@ -1,11 +1,12 @@
-import './app.css'
-import App from './App.svelte'
+import "./app.css";
+import App from "./App.svelte";
 import axios from "axios";
 
-axios.defaults.baseURL = "https://dmce1m4ypodn6.cloudfront.net/api"
+axios.defaults.baseURL = "https://dmce1m4ypodn6.cloudfront.net/api";
+axios.defaults.withCredentials = true;
 
 const app = new App({
-  target: document.getElementById('app')
-})
+  target: document.getElementById("app"),
+});
 
-export default app
+export default app;
